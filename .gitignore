@@ -9,6 +9,9 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
+/Assets/Resources/
+/Assets/Animations/
+/Assets/TextMesh Pro/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
@@ -57,4 +60,5 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
 
