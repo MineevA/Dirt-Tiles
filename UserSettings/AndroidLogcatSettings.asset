@@ -1,9 +1,9 @@
 {
     "m_SelectedDeviceId": "H8HNW18C28002780",
     "m_SelectedPackage": {
-        "deviceId": "H8HNW18C28002780",
-        "name": "com.DefaultCompany.com.unity.template.mobile2D",
-        "processId": 17328,
+        "deviceId": "",
+        "name": "",
+        "processId": 0,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -12,6 +12,18 @@
             "deviceId": "H8HNW18C28002780",
             "name": "com.DefaultCompany.com.unity.template.mobile2D",
             "processId": 17328,
+            "exited": true
+        },
+        {
+            "deviceId": "H8HNW18C28002780",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 15794,
+            "exited": true
+        },
+        {
+            "deviceId": "H8HNW18C28002780",
+            "name": "com.huawei.android.launcher",
+            "processId": 2925,
             "exited": false
         }
     ],

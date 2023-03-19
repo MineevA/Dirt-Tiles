@@ -1,13 +1,16 @@
-Shader "Unlit/NewUnlitShader"
+Shader "Unlit/DirtShader"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _AlphaTex ("AlphaTexture",2D) = "white" {}
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
+        Tags { "Queue" = "Transparent" "RenderType" = "Transparent"}
+        ZWrite Off
+        Blend SrcAlpha OneMinusSrcAlpha
+        Lighting Off
 
         Pass
         {
@@ -15,7 +18,6 @@ Shader "Unlit/NewUnlitShader"
             #pragma vertex vert
             #pragma fragment frag
             // make fog work
-            #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
 
@@ -28,19 +30,18 @@ Shader "Unlit/NewUnlitShader"
             struct v2f
             {
                 float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            sampler2D _AlphaTex;
 
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
 
@@ -48,8 +49,10 @@ Shader "Unlit/NewUnlitShader"
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
+                fixed4 alphaColor = tex2D(_AlphaTex, i.uv);
+
+                col.a = min(alphaColor.r, col.a);
                 // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }
             ENDCG
