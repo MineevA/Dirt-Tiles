@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
 
 public class Spray : MonoBehaviour
 {
@@ -9,19 +6,7 @@ public class Spray : MonoBehaviour
     public GameObject stream;
     public GameObject splash;
 
-    public Texture2D sprayWashPattern;
-    public Texture2D streamWashPattern;
-
-    private Dictionary<GunMode, bool[,]> washPatternsAlphaFlagArrayMap;
-
-    private void Start()
-    {
-        washPatternsAlphaFlagArrayMap = new Dictionary<GunMode, bool[,]>()
-        {
-            { GunMode.Spray, TextureAlphaFlagArray(sprayWashPattern) },
-            { GunMode.Stream, TextureAlphaFlagArray(streamWashPattern) }
-        };
-    }
+    private Vector2 lastHitCoord = Vector2.left;
 
     public void SetEffectActive(bool enabled)
     {
@@ -30,27 +15,40 @@ public class Spray : MonoBehaviour
         splash.SetActive(enabled);
     }
     
-    public void CleanDirt(Vector3 target, GunMode mode)
+    public void CleanDirt(Vector3 target)
     {
-        var ray = new Ray(target, Vector3.forward);
-
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Raycast(target,out var dirt, out var hit))
         {
-            if (hit.collider.TryGetComponent<Dirt>(out var dirt))
-            {
-                dirt.DrawPixels(hit.textureCoord, washPatternsAlphaFlagArrayMap[mode]);
-            }
+            dirt.DrawPixels(hit.textureCoord);
+            lastHitCoord = hit.textureCoord;
         }
     }
 
-    private bool[,] TextureAlphaFlagArray(Texture2D texture)
+    public void CleanNext(Vector3 target)
     {
-        var array = new bool[texture.width, texture.height];
+        if (Raycast(target, out var dirt, out var hit))
+        {
+            if (lastHitCoord == Vector2.left)
+                dirt.DrawPixels(hit.textureCoord);
+            else
+                dirt.DrawLine(lastHitCoord, hit.textureCoord);
 
-        for (int x = 0; x < texture.width; x++)
-            for (int y = 0; y < texture.height; y++)
-                array[x, y] = texture.GetPixel(x, y).a > 0;
-
-        return array;
+            lastHitCoord = hit.textureCoord;
+        }
+        else
+            lastHitCoord = Vector2.left;
     }
+
+    private bool Raycast(Vector3 target, out Dirt dirt, out RaycastHit hit)
+    {
+        var ray = new Ray(target, Vector3.forward);
+
+        if (Physics.Raycast(ray, out hit))
+            return hit.collider.TryGetComponent<Dirt>(out dirt);
+
+        dirt = null;
+        hit = new RaycastHit();
+        return false;
+    }
+
 }
