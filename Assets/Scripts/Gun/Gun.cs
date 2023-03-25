@@ -21,7 +21,8 @@ public class Gun : MonoBehaviour
         {
             isActivated = value; 
             sprayEffect.SetEffectActive(isActivated);
-            sprayEffect.CleanDirt(target.position, gunMode);
+            if (isActivated)
+                sprayEffect.CleanDirt(target.position);
         }
     }
 
@@ -35,7 +36,7 @@ public class Gun : MonoBehaviour
 
     public void GunMoved()
     {
-        sprayEffect.CleanDirt(target.position, gunMode);
+        sprayEffect.CleanNext(target.position);
     }
 }
 

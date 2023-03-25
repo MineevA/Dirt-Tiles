@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
 
 public class Spray : MonoBehaviour
 {
@@ -9,13 +6,7 @@ public class Spray : MonoBehaviour
     public GameObject stream;
     public GameObject splash;
 
-    public Texture2D sprayWashPattern;
-    public Texture2D streamWashPattern;
-
-    private void Start()
-    {
-
-    }
+    private Vector2 lastHitCoord = Vector2.left;
 
     public void SetEffectActive(bool enabled)
     {
@@ -24,16 +15,40 @@ public class Spray : MonoBehaviour
         splash.SetActive(enabled);
     }
     
-    public void CleanDirt(Vector3 target, GunMode mode)
+    public void CleanDirt(Vector3 target)
+    {
+        if (Raycast(target,out var dirt, out var hit))
+        {
+            dirt.DrawPixels(hit.textureCoord);
+            lastHitCoord = hit.textureCoord;
+        }
+    }
+
+    public void CleanNext(Vector3 target)
+    {
+        if (Raycast(target, out var dirt, out var hit))
+        {
+            if (lastHitCoord == Vector2.left)
+                dirt.DrawPixels(hit.textureCoord);
+            else
+                dirt.DrawLine(lastHitCoord, hit.textureCoord);
+
+            lastHitCoord = hit.textureCoord;
+        }
+        else
+            lastHitCoord = Vector2.left;
+    }
+
+    private bool Raycast(Vector3 target, out Dirt dirt, out RaycastHit hit)
     {
         var ray = new Ray(target, Vector3.forward);
 
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            if (hit.collider.TryGetComponent<Dirt>(out var dirt))
-            {
-                dirt.DrawPixels(hit.textureCoord);
-            }
-        }
+        if (Physics.Raycast(ray, out hit))
+            return hit.collider.TryGetComponent<Dirt>(out dirt);
+
+        dirt = null;
+        hit = new RaycastHit();
+        return false;
     }
+
 }

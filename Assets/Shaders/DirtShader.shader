@@ -17,7 +17,6 @@ Shader "Unlit/DirtShader"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
 
             #include "UnityCG.cginc"
 
@@ -47,12 +46,10 @@ Shader "Unlit/DirtShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 alphaColor = tex2D(_AlphaTex, i.uv);
 
                 col.a = min(alphaColor.r, col.a);
-                // apply fog
                 return col;
             }
             ENDCG

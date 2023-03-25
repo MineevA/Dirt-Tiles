@@ -25,7 +25,7 @@ public class InputManager : MonoBehaviour
 
     private void OnDisable()
     {
-        touchControls.Disable();
+        touchControls?.Disable();
     }
 
     private void Start()
@@ -33,6 +33,8 @@ public class InputManager : MonoBehaviour
         touchControls.TouchMap.TouchPress.started += OnTouchStart;
         touchControls.TouchMap.TouchPress.canceled += OnTouchEnded;
         touchControls.TouchMap.TouchMoved.started += OnTouchMoved;
+
+        Application.targetFrameRate = 60;
     }
 
     private void OnTouchStart(InputAction.CallbackContext context)

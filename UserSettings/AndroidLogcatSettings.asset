@@ -1,19 +1,13 @@
 {
     "m_SelectedDeviceId": "H8HNW18C28002780",
     "m_SelectedPackage": {
-        "deviceId": "",
-        "name": "",
-        "processId": 0,
+        "deviceId": "H8HNW18C28002780",
+        "name": "com.DefaultCompany.com.unity.template.mobile2D",
+        "processId": 7654,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
-        {
-            "deviceId": "H8HNW18C28002780",
-            "name": "com.DefaultCompany.com.unity.template.mobile2D",
-            "processId": 17328,
-            "exited": true
-        },
         {
             "deviceId": "H8HNW18C28002780",
             "name": "com.DefaultCompany.com.unity.template.mobile2D",
@@ -24,6 +18,24 @@
             "deviceId": "H8HNW18C28002780",
             "name": "com.huawei.android.launcher",
             "processId": 2925,
+            "exited": true
+        },
+        {
+            "deviceId": "H8HNW18C28002780",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 26744,
+            "exited": true
+        },
+        {
+            "deviceId": "H8HNW18C28002780",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 27672,
+            "exited": true
+        },
+        {
+            "deviceId": "H8HNW18C28002780",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 7654,
             "exited": false
         }
     ],
