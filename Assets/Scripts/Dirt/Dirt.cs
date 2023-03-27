@@ -1,11 +1,12 @@
-using Unity.Mathematics;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(DirtCounter))]  
 public class Dirt : MonoBehaviour
 {
     public CustomRenderTexture alphaMap;
     public Material alphaMaterial;
+    public DirtCounter dirtCounter;
 
     private Vector2 patternRelativeSize = new Vector2(0.08f,0.02f);
 
@@ -21,6 +22,7 @@ public class Dirt : MonoBehaviour
     private void Start()
     {
         alphaMap.Initialize();
+        dirtCounter = GetComponent<DirtCounter>();
     }
 
     public void DrawPixels(Vector2 uv)
@@ -31,6 +33,8 @@ public class Dirt : MonoBehaviour
         alphaMaterial.SetFloat(LineSegmentArccos, .0f);
         alphaMaterial.SetInt(PatternOverlapModifier, 0);
         alphaMaterial.SetInt(SegmentCount, 0);
+
+        dirtCounter.Recalculate();
     }
 
     public void DrawLine(Vector2 uvStart, Vector2 uvFinish)
@@ -52,6 +56,8 @@ public class Dirt : MonoBehaviour
         alphaMaterial.SetFloat(LineSegmentArccos, segmentVector.magnitude / Mathf.Abs(segmentVector.y));
         alphaMaterial.SetInt(PatternOverlapModifier, patternOverlapModifier);
         alphaMaterial.SetInt(SegmentCount, (int)segmentCount);
+
+        dirtCounter.Recalculate();
     }
 
     public void SetErasePattern(Texture2D pattern, Vector2 patternRelativeSize)
@@ -83,4 +89,6 @@ public class Dirt : MonoBehaviour
 
         return Vector2.zero;
     }
-}
+
+} 
+

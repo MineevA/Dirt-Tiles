@@ -6,6 +6,7 @@ TagManager:
   tags:
   - InputManager
   - Dirt
+  - Main counter
   layers:
   - Default
   - TransparentFX

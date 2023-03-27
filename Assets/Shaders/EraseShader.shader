@@ -10,6 +10,7 @@ Shader "EraserShader"
         _LineSegmentArccos("Line segment arccos", float) = .0
         _PatternOverlapModifier("Pattern overlap modifier", int) = 0
         _SegmentCount("Segment count", int) = 0
+        _Test("Test", int) = 0
     }
 
     SubShader
@@ -33,6 +34,7 @@ Shader "EraserShader"
             float _LineSegmentArccos;
             int _SegmentCount;
             int _PatternOverlapModifier;
+            int _Test;
             sampler2D _Pattern;
             
             float GetColorFromPattern(float2 uv, float2 patternStartUV)
@@ -73,6 +75,7 @@ Shader "EraserShader"
             {
                 float4 color = tex2D(_SelfTexture2D, IN.localTexcoord.xy);
                 float4 patternStartPositions = GetPatternStartPositions(IN.localTexcoord.xy); 
+                _Test += step(0, color.r);
                 
                 color.r = min(GetColorFromPattern(IN.localTexcoord.xy, patternStartPositions.rg),color.r);
                 color.r = min(GetColorFromPattern(IN.localTexcoord.xy, patternStartPositions.ba),color.r);
