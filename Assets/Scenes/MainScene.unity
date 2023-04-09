@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37986028, g: 0.37986028, b: 0.37986028, a: 1}
+  m_IndirectSpecularColor: {r: 0.23715338, g: 0.23715338, b: 0.23715338, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -386,6 +386,18 @@ MonoBehaviour:
       - m_Target: {fileID: 185575878}
         m_TargetAssemblyTypeName: ButtonSpriteChanger, Assembly-CSharp
         m_MethodName: OnButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1220363059}
+        m_TargetAssemblyTypeName: Gun, Assembly-CSharp
+        m_MethodName: ChangeMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6912,7 +6924,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb75f2249a3f0f45b0c6dc5efe5e0c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 257329742}
+  isActivated: 0
+  streamSprite: {fileID: 21300000, guid: 9ff5df00dd408fb4a954b511b16f11f4, type: 3}
+  spraySprite: {fileID: 21300000, guid: 7677f50196f84844e95cb1ccb52bbbc1, type: 3}
 --- !u!114 &1220363060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6928,6 +6942,9 @@ MonoBehaviour:
   jet: {fileID: 79368752}
   stream: {fileID: 1094411850}
   splash: {fileID: 2108124940}
+  target: {fileID: 257329741}
+  particles: {fileID: 960214586}
+  erasePatternSizeUV: {x: 0, y: 0}
 --- !u!1 &1322919408
 GameObject:
   m_ObjectHideFlags: 0
@@ -7188,8 +7205,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb43280b646f664d91bf56977ca6502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startInvisiblePixels: 0
-  invisiblePixels: 0
   mapWidth: 64
   mapHeight: 64
   alphaThreshold: 50

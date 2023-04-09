@@ -8,8 +8,6 @@ public class Dirt : MonoBehaviour
     public Material alphaMaterial;
     public DirtCounter dirtCounter;
 
-    private Vector2 patternRelativeSize = new Vector2(0.08f,0.02f);
-
     private readonly int ErasePosition          = Shader.PropertyToID("_ErasePosition");
     private readonly int Pattern                = Shader.PropertyToID("_Pattern");
     private readonly int PatternRelativeSize    = Shader.PropertyToID("_PatternRelativeSize");
@@ -25,7 +23,7 @@ public class Dirt : MonoBehaviour
         dirtCounter = GetComponent<DirtCounter>();
     }
 
-    public void DrawPixels(Vector2 uv)
+    public void DrawPixels(Vector2 uv, Vector2 patternRelativeSize)
     {
         alphaMaterial.SetVector(ErasePosition, uv);
         alphaMaterial.SetVector(EraseLineSegment, Vector2.zero);
@@ -33,14 +31,15 @@ public class Dirt : MonoBehaviour
         alphaMaterial.SetFloat(LineSegmentArccos, .0f);
         alphaMaterial.SetInt(PatternOverlapModifier, 0);
         alphaMaterial.SetInt(SegmentCount, 0);
+        alphaMaterial.SetVector(PatternRelativeSize, patternRelativeSize);
 
         dirtCounter.Recalculate();
     }
 
-    public void DrawLine(Vector2 uvStart, Vector2 uvFinish)
+    public void DrawLine(Vector2 uvStart, Vector2 uvFinish, Vector2 patternRelativeSize)
     {
         var line = uvFinish - uvStart;
-        var segmentVector = CalculateSegmentVector(line);
+        var segmentVector = CalculateSegmentVector(line, patternRelativeSize);
         var segmentCount = 0f;
         var patternOverlapModifier = 0;
         
@@ -52,6 +51,7 @@ public class Dirt : MonoBehaviour
 
         alphaMaterial.SetVector(ErasePosition, uvStart);
         alphaMaterial.SetVector(EraseLineSegment, segmentVector);
+        alphaMaterial.SetVector(PatternRelativeSize, patternRelativeSize);
         alphaMaterial.SetFloat(EraseLineSegmentLength,  segmentVector.magnitude);
         alphaMaterial.SetFloat(LineSegmentArccos, segmentVector.magnitude / Mathf.Abs(segmentVector.y));
         alphaMaterial.SetInt(PatternOverlapModifier, patternOverlapModifier);
@@ -60,15 +60,7 @@ public class Dirt : MonoBehaviour
         dirtCounter.Recalculate();
     }
 
-    public void SetErasePattern(Texture2D pattern, Vector2 patternRelativeSize)
-    {
-        alphaMaterial.SetTexture(Pattern, pattern);
-        alphaMaterial.SetVector(PatternRelativeSize, patternRelativeSize);
-        
-        this.patternRelativeSize = patternRelativeSize;
-    }
-
-    private Vector2 CalculateSegmentVector(Vector2 line)
+    private Vector2 CalculateSegmentVector(Vector2 line, Vector2 patternRelativeSize)
     {
         var rectX = Mathf.Sign(line.x) * patternRelativeSize.x / 2;
         var rectY = Mathf.Sign(line.y) * patternRelativeSize.y / 2;

@@ -5,6 +5,10 @@ public class Spray : MonoBehaviour
     public GameObject jet;
     public GameObject stream;
     public GameObject splash;
+    public GameObject target;
+    public GameObject particles;
+
+    public Vector2 erasePatternSizeUV;
 
     private Vector2 lastHitCoord = Vector2.left;
 
@@ -13,30 +17,38 @@ public class Spray : MonoBehaviour
         jet.SetActive(enabled);
         stream.SetActive(enabled);
         splash.SetActive(enabled);
+
+        if (enabled)
+            CleanDirt();
     }
     
-    public void CleanDirt(Vector3 target)
+    public void CleanDirt()
     {
-        if (Raycast(target,out var dirt, out var hit))
+        if (Raycast(target.transform.position,out var dirt, out var hit))
         {
-            dirt.DrawPixels(hit.textureCoord);
+            dirt.DrawPixels(hit.textureCoord, erasePatternSizeUV);
             lastHitCoord = hit.textureCoord;
         }
     }
 
-    public void CleanNext(Vector3 target)
+    public void CleanNext()
     {
-        if (Raycast(target, out var dirt, out var hit))
+        if (Raycast(target.transform.position, out var dirt, out var hit))
         {
             if (lastHitCoord == Vector2.left)
-                dirt.DrawPixels(hit.textureCoord);
+                dirt.DrawPixels(hit.textureCoord, erasePatternSizeUV);
             else
-                dirt.DrawLine(lastHitCoord, hit.textureCoord);
+                dirt.DrawLine(lastHitCoord, hit.textureCoord, erasePatternSizeUV);
 
             lastHitCoord = hit.textureCoord;
         }
         else
             lastHitCoord = Vector2.left;
+    }
+    
+    public void SetMode(IGunMode gunMode)
+    {
+        gunMode.OnEnable(this);
     }
 
     private bool Raycast(Vector3 target, out Dirt dirt, out RaycastHit hit)

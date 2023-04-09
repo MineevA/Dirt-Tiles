@@ -3,44 +3,49 @@ using UnityEngine;
 [RequireComponent(typeof(Spray))]
 public class Gun : MonoBehaviour
 {
-    public Transform target;
-    
-    private GunMode gunMode;
-    public GunMode GunMode
-    {
-        get => gunMode;
-        set => gunMode = value;
-    }
-
-    private bool isActivated = false;
-    public bool IsActivated 
-    {
-        get => isActivated;
-        set
-        {
-            isActivated = value; 
-            sprayEffect.SetEffectActive(isActivated);
-            if (isActivated)
-                sprayEffect.CleanDirt(target.position);
-        }
-    }
+    public bool isActivated;
+    public Sprite streamSprite;
+    public Sprite spraySprite;
 
     private Spray sprayEffect;
+
+    private StreamGunMode streamGunMode;
+    private SprayGunMode sprayGunMode;
+    private bool isSprayMode;
 
     private void Start()
     {
         sprayEffect = GetComponent<Spray>();
-        gunMode = GunMode.Spray;
+
+        streamGunMode = new StreamGunMode();
+        streamGunMode.SetSprite(streamSprite);
+
+        sprayGunMode = new SprayGunMode();
+        sprayGunMode.SetSprite(spraySprite);
+
+        isSprayMode = true;
+
+        sprayEffect.SetMode(sprayGunMode);
     }
 
     public void GunMoved()
     {
-        sprayEffect.CleanNext(target.position);
+        sprayEffect.CleanNext();
     }
-}
 
-public enum GunMode
-{
-    Spray, 
-    Stream
+    public void SetActive(bool active)
+    {
+        isActivated = active;
+        sprayEffect.SetEffectActive(isActivated);
+    }
+
+    public void ChangeMode()
+    {
+        isSprayMode = !isSprayMode;
+
+        if (isSprayMode)
+            sprayEffect.SetMode(sprayGunMode);
+        else
+            sprayEffect.SetMode(streamGunMode);
+    }
 }
