@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class StreamGunMode : IGunMode
 {
-    private readonly Vector2 targetPosition = new(-1.25f, 2.13f);
+    private readonly Vector2 targetPosition = new(-1.15f, 2.13f);
     private readonly Vector2 splashPosition = new(-1.04f, 4.14f);
-    private readonly Vector2 splashScale = new(0.12f, 1f);
+    private readonly Vector2 splashScale = new(0.18f, 1f);
     private readonly Vector2 streamPosition = new(-1.04f, 6.23f);
     private readonly Vector2 streamScale = new(0.12f, 1f);
     private readonly Vector2 patternRelativeSize = new(0.02f, 0.02f);

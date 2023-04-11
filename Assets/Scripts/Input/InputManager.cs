@@ -50,7 +50,7 @@ public class InputManager : MonoBehaviour
 
     private void OnTouchMoved(InputAction.CallbackContext context)
     {
-        if (OnTouchMove != null && !IsPointerOverUI(EventSystem.current)) 
+        if (OnTouchMove != null) 
             OnTouchMove.Invoke(new TouchPositions(TouchScreenPosition()));
     }
 

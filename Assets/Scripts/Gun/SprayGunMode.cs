@@ -7,7 +7,7 @@ public class SprayGunMode : IGunMode
     private readonly Vector2 splashScale = new(1f, 1f);
     private readonly Vector2 streamPosition = new(-1.13f, 6.23f);
     private readonly Vector2 streamScale = new(1f, 2f);
-    private readonly Vector2 patternRelativeSize = new(0.06f, 0.02f);
+    private readonly Vector2 patternRelativeSize = new(0.10f, 0.02f);
     private Sprite jetSprite;
     
     public void OnEnable(Spray spray)
