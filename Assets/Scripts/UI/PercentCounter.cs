@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 
@@ -47,6 +48,6 @@ public class PercentCounter : MonoBehaviour
 
     private void DrawCounter()
     {
-        text.text = counter.ToString("F");
+        text.text = counter.ToString("F1",CultureInfo.InvariantCulture);
     }
 }

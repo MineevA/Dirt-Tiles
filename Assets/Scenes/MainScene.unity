@@ -1478,8 +1478,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunTarget: {fileID: 257329742}
   inputManager: {fileID: 1794590655}
-  velocityModifier: 0.06
-  velocitySquareDistanceModifier: 10
+  velocityModifier: 0.01
+  velocitySquareDistanceModifier: 100
   returnSpeed: 1.5
   trembleReduce: 0.05
   cameraBounds:
@@ -6967,6 +6967,7 @@ MonoBehaviour:
   target: {fileID: 257329741}
   particles: {fileID: 960214586}
   erasePatternSizeUV: {x: 0, y: 0}
+  solidDirtModifier: 0
 --- !u!1 &1322919408
 GameObject:
   m_ObjectHideFlags: 0
@@ -7003,7 +7004,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -48, y: -48}
+  m_AnchoredPosition: {x: -40, y: -48}
   m_SizeDelta: {x: 32, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1322919410
@@ -7227,9 +7228,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb43280b646f664d91bf56977ca6502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapWidth: 64
-  mapHeight: 64
-  alphaThreshold: 20
+  mapWidth: 96
+  mapHeight: 128
+  alphaThreshold: 0
 --- !u!1 &1794590654
 GameObject:
   m_ObjectHideFlags: 0

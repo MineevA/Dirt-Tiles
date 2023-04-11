@@ -8,7 +8,7 @@ public class CameraMovement : MonoBehaviour
     [Range(0f, 1f)]
     public float velocityModifier;
 
-    [Range(0f, 10f)]
+    [Range(0f, 100f)]
     public float velocitySquareDistanceModifier;
     
     [Range(0f, 10f)]

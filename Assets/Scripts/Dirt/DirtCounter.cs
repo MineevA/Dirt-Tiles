@@ -59,7 +59,7 @@ public class DirtCounter : MonoBehaviour
         var pixels = texture.GetPixels32();
        
         foreach(var pixel in pixels)
-            if (pixel.a >= alphaThreshold)
+            if (pixel.a > alphaThreshold)
                 visiblePixels++;
 
         return visiblePixels;
