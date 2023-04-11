@@ -16,6 +16,7 @@ public class Dirt : MonoBehaviour
     private readonly int LineSegmentArccos      = Shader.PropertyToID("_LineSegmentArccos");
     private readonly int SegmentCount           = Shader.PropertyToID("_SegmentCount");
     private readonly int PatternOverlapModifier = Shader.PropertyToID("_PatternOverlapModifier");
+    private readonly int SolidDirtModifier      = Shader.PropertyToID("_SolidDirtModifier");
     
     private void Start()
     {
@@ -23,20 +24,26 @@ public class Dirt : MonoBehaviour
         dirtCounter = GetComponent<DirtCounter>();
     }
 
-    public void DrawPixels(Vector2 uv, Vector2 patternRelativeSize)
+    public void DrawPixels(Vector2 uv, 
+                           Vector2 patternRelativeSize,
+                           float solidDirtModifier)
     {
         alphaMaterial.SetVector(ErasePosition, uv);
         alphaMaterial.SetVector(EraseLineSegment, Vector2.zero);
         alphaMaterial.SetFloat(EraseLineSegmentLength, .0f);
         alphaMaterial.SetFloat(LineSegmentArccos, .0f);
+        alphaMaterial.SetFloat(SolidDirtModifier, solidDirtModifier);
         alphaMaterial.SetInt(PatternOverlapModifier, 0);
         alphaMaterial.SetInt(SegmentCount, 0);
         alphaMaterial.SetVector(PatternRelativeSize, patternRelativeSize);
-
+        
         dirtCounter.Recalculate();
     }
 
-    public void DrawLine(Vector2 uvStart, Vector2 uvFinish, Vector2 patternRelativeSize)
+    public void DrawLine(Vector2 uvStart, 
+                         Vector2 uvFinish, 
+                         Vector2 patternRelativeSize,
+                         float solidDirtModifier)
     {
         var line = uvFinish - uvStart;
         var segmentVector = CalculateSegmentVector(line, patternRelativeSize);
@@ -54,6 +61,7 @@ public class Dirt : MonoBehaviour
         alphaMaterial.SetVector(PatternRelativeSize, patternRelativeSize);
         alphaMaterial.SetFloat(EraseLineSegmentLength,  segmentVector.magnitude);
         alphaMaterial.SetFloat(LineSegmentArccos, segmentVector.magnitude / Mathf.Abs(segmentVector.y));
+        alphaMaterial.SetFloat(SolidDirtModifier, solidDirtModifier);
         alphaMaterial.SetInt(PatternOverlapModifier, patternOverlapModifier);
         alphaMaterial.SetInt(SegmentCount, (int)segmentCount);
 

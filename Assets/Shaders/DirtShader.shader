@@ -3,6 +3,7 @@ Shader "Unlit/DirtShader"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _SolidDirt ("Texture", 2D) = "white" {}
         _AlphaTex ("AlphaTexture",2D) = "white" {}
     }
     SubShader
@@ -34,6 +35,10 @@ Shader "Unlit/DirtShader"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+
+            sampler2D _SolidDirt;
+            float4 _SolidDirt_ST;
+
             sampler2D _AlphaTex;
 
             v2f vert (appdata v)
@@ -46,11 +51,15 @@ Shader "Unlit/DirtShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
+                fixed4 color = tex2D(_MainTex, i.uv);
+                fixed4 solidColor = tex2D(_SolidDirt, i.uv);
+
                 fixed4 alphaColor = tex2D(_AlphaTex, i.uv);
 
-                col.a = min(alphaColor.r, col.a);
-                return col;
+                color.a = min(alphaColor.r, color.a);
+                solidColor.a = min(alphaColor.g, solidColor.a);
+                    
+                return max(color,solidColor);
             }
             ENDCG
         }

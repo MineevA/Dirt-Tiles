@@ -8,6 +8,8 @@ public class StreamGunMode : IGunMode
     private readonly Vector2 streamPosition = new(-1.04f, 6.23f);
     private readonly Vector2 streamScale = new(0.12f, 1f);
     private readonly Vector2 patternRelativeSize = new(0.02f, 0.02f);
+    private readonly float solidModifier = 0.6f;
+
     private Sprite jetSprite;
     
     public void OnEnable(Spray spray)
@@ -19,6 +21,7 @@ public class StreamGunMode : IGunMode
         spray.jet.GetComponent<SpriteRenderer>().sprite = jetSprite;
         
         spray.erasePatternSizeUV = patternRelativeSize;
+        spray.solidDirtModifier = solidModifier;
         
     }
 

@@ -9,6 +9,7 @@ public class Spray : MonoBehaviour
     public GameObject particles;
 
     public Vector2 erasePatternSizeUV;
+    public float solidDirtModifier;
 
     private Vector2 lastHitCoord = Vector2.left;
 
@@ -26,7 +27,7 @@ public class Spray : MonoBehaviour
     {
         if (Raycast(target.transform.position,out var dirt, out var hit))
         {
-            dirt.DrawPixels(hit.textureCoord, erasePatternSizeUV);
+            dirt.DrawPixels(hit.textureCoord, erasePatternSizeUV, solidDirtModifier);
             lastHitCoord = hit.textureCoord;
         }
     }
@@ -36,9 +37,9 @@ public class Spray : MonoBehaviour
         if (Raycast(target.transform.position, out var dirt, out var hit))
         {
             if (lastHitCoord == Vector2.left)
-                dirt.DrawPixels(hit.textureCoord, erasePatternSizeUV);
+                dirt.DrawPixels(hit.textureCoord, erasePatternSizeUV, solidDirtModifier);
             else
-                dirt.DrawLine(lastHitCoord, hit.textureCoord, erasePatternSizeUV);
+                dirt.DrawLine(lastHitCoord, hit.textureCoord, erasePatternSizeUV, solidDirtModifier);
 
             lastHitCoord = hit.textureCoord;
         }

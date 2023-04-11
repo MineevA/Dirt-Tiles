@@ -1,9 +1,9 @@
 {
     "m_SelectedDeviceId": "0S62401S22100055",
     "m_SelectedPackage": {
-        "deviceId": "",
-        "name": "",
-        "processId": 0,
+        "deviceId": "0S62401S22100055",
+        "name": "com.DefaultCompany.com.unity.template.mobile2D",
+        "processId": 20149,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -84,6 +84,12 @@
             "deviceId": "0S62401S22100055",
             "name": "com.android.launcher3",
             "processId": 1810,
+            "exited": false
+        },
+        {
+            "deviceId": "0S62401S22100055",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 20149,
             "exited": false
         }
     ],
