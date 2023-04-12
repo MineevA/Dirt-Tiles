@@ -11,7 +11,7 @@ public class Spray : MonoBehaviour
     public Vector2 erasePatternSizeUV;
     public float solidDirtModifier;
 
-    private Vector2 lastHitCoord = Vector2.left;
+    private IGunMode gunMode;
 
     public void SetEffectActive(bool enabled)
     {
@@ -25,36 +25,23 @@ public class Spray : MonoBehaviour
     
     public void CleanDirt()
     {
-        if (Raycast(target.transform.position,out var dirt, out var hit))
-        {
-            dirt.DrawPixels(hit.textureCoord, erasePatternSizeUV, solidDirtModifier);
-            lastHitCoord = hit.textureCoord;
-        }
+        gunMode.OnCleanDirt(this);
     }
 
     public void CleanNext()
     {
-        if (Raycast(target.transform.position, out var dirt, out var hit))
-        {
-            if (lastHitCoord == Vector2.left)
-                dirt.DrawPixels(hit.textureCoord, erasePatternSizeUV, solidDirtModifier);
-            else
-                dirt.DrawLine(lastHitCoord, hit.textureCoord, erasePatternSizeUV, solidDirtModifier);
-
-            lastHitCoord = hit.textureCoord;
-        }
-        else
-            lastHitCoord = Vector2.left;
+        gunMode.OnCleanNext(this);
     }
     
     public void SetMode(IGunMode gunMode)
     {
+        this.gunMode = gunMode;
         gunMode.OnEnable(this);
     }
 
-    private bool Raycast(Vector3 target, out Dirt dirt, out RaycastHit hit)
+    public bool Raycast(Transform target, out Dirt dirt, out RaycastHit hit)
     {
-        var ray = new Ray(target, Vector3.forward);
+        var ray = new Ray(target.position, Vector3.forward);
 
         if (Physics.Raycast(ray, out hit))
             return hit.collider.TryGetComponent<Dirt>(out dirt);

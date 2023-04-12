@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class SprayGunMode : IGunMode
 {
@@ -11,7 +12,40 @@ public class SprayGunMode : IGunMode
     private readonly float solidModifier = 0.1f;
 
     private Sprite jetSprite;
-    
+    private Vector2 lastHitCoord = Vector2.left;
+
+    public void OnCleanDirt(Spray spray)
+    {
+        if (spray.Raycast(spray.target.transform, out var dirt, out var hit))
+        {
+            dirt.DrawPixels(hit.textureCoord,
+                        spray.erasePatternSizeUV,
+                        spray.solidDirtModifier);
+
+            lastHitCoord = hit.textureCoord;
+        }
+    }
+
+    public void OnCleanNext(Spray spray)
+    {
+        if (spray.Raycast(spray.target.transform, out var dirt, out var hit))
+        {
+            if (lastHitCoord == Vector2.left)
+                dirt.DrawPixels(hit.textureCoord, 
+                                spray.erasePatternSizeUV, 
+                                spray.solidDirtModifier);
+            else
+                dirt.DrawLine(lastHitCoord, 
+                              hit.textureCoord, 
+                              spray.erasePatternSizeUV, 
+                              spray.solidDirtModifier);
+
+            lastHitCoord = hit.textureCoord;
+        }
+        else
+            lastHitCoord = Vector2.left;
+    }
+
     public void OnEnable(Spray spray)
     {
         SetTransform(spray.target.transform, targetPosition, Vector2.one);
@@ -22,7 +56,8 @@ public class SprayGunMode : IGunMode
         
         spray.erasePatternSizeUV = patternRelativeSize;
         spray.solidDirtModifier = solidModifier;
-        
+
+        lastHitCoord = Vector2.left;
     }
 
     public void SetSprite(Sprite gunModeSprite)
