@@ -7,9 +7,9 @@ public class Dirt : MonoBehaviour
     public CustomRenderTexture alphaMap;
     public Material alphaMaterial;
     public DirtCounter dirtCounter;
+    public NavigationMap navigationMap;
 
     private readonly int ErasePosition          = Shader.PropertyToID("_ErasePosition");
-    private readonly int Pattern                = Shader.PropertyToID("_Pattern");
     private readonly int PatternRelativeSize    = Shader.PropertyToID("_PatternRelativeSize");
     private readonly int EraseLineSegment       = Shader.PropertyToID("_EraseLineSegment");
     private readonly int EraseLineSegmentLength = Shader.PropertyToID("_EraseLineSegmentLength");
@@ -22,6 +22,10 @@ public class Dirt : MonoBehaviour
     {
         alphaMap.Initialize();
         dirtCounter = GetComponent<DirtCounter>();
+        navigationMap = new NavigationMap(new Vector2Int(8,10),
+                                          1,
+                                          new Vector2(-4,-5));
+        navigationMap.FillCellMap();
     }
 
     public void DrawPixels(Vector2 uv, 

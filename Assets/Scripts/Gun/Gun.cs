@@ -28,14 +28,19 @@ public class Gun : MonoBehaviour
         sprayEffect.SetMode(sprayGunMode);
     }
 
-    public void GunMoved()
+    public void GunMoved(Vector3 position)
     {
+        transform.position = position;
         sprayEffect.CleanNext();
     }
 
-    public void SetActive(bool active)
+    public void SetActive(bool active, Vector3 position)
     {
         isActivated = active;
+
+        if (isActivated)
+            transform.position = position;
+
         sprayEffect.SetEffectActive(isActivated);
     }
 

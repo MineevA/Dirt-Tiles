@@ -32,7 +32,7 @@ public class Spray : MonoBehaviour
     {
         gunMode.OnCleanNext(this);
     }
-    
+
     public void SetMode(IGunMode gunMode)
     {
         this.gunMode = gunMode;

@@ -18,21 +18,17 @@ public class GunInputController : MonoBehaviour
 
     private void OnTouchDown(TouchPositions touchPositions)
     {
-        transform.position = touchPositions.worldPosition;
-        gun.SetActive(true);
+        gun.SetActive(true, touchPositions.worldPosition);
     }
 
     private void OntouchMove(TouchPositions touchPositions)
     {
         if (gun.isActivated)
-        {
-            transform.position = touchPositions.worldPosition;
-            gun.GunMoved();
-        }
+            gun.GunMoved(touchPositions.worldPosition);
     }
 
     private void OnTouchUp(TouchPositions touchPositions)
     {
-        gun.SetActive(false);
+        gun.SetActive(false, touchPositions.worldPosition);
     }
 }

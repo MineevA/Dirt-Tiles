@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class StreamGunMode : IGunMode
@@ -16,7 +17,10 @@ public class StreamGunMode : IGunMode
     public void OnCleanDirt(Spray spray)
     {
         if (spray.Raycast(spray.target.transform, out var dirt, out var hit))
-        {
+            ConnectPositionToNavigationMap(dirt, spray);
+
+        if (spray.Raycast(spray.target.transform, out dirt, out hit))
+        { 
             dirt.DrawPixels(hit.textureCoord,
                         spray.erasePatternSizeUV,
                         spray.solidDirtModifier);
@@ -28,7 +32,11 @@ public class StreamGunMode : IGunMode
     public void OnCleanNext(Spray spray)
     {
         if (spray.Raycast(spray.target.transform, out var dirt, out var hit))
-        {
+            ConnectPositionToNavigationMap(dirt, spray);
+
+        if (spray.Raycast(spray.target.transform, out dirt, out hit))
+        { 
+
             if (lastHitCoord == Vector2.left)
                 dirt.DrawPixels(hit.textureCoord,
                                 spray.erasePatternSizeUV,
@@ -73,5 +81,15 @@ public class StreamGunMode : IGunMode
         transform.localScale = new Vector3(scale.x,
                                            scale.y,
                                            transform.localScale.z);
+    }
+
+    private void ConnectPositionToNavigationMap(Dirt dirt, Spray spray)
+    {
+        var transformPosition = (Vector2)spray.target.transform.position;
+        var delta = dirt.navigationMap.GetClosestPointOnMapInWorldPosition(transformPosition) - transformPosition;
+        var sprayPatternDelta = new Vector3(patternRelativeSize.x * dirt.transform.localScale.x / 2,
+                                            patternRelativeSize.y * dirt.transform.localScale.y / 2);
+
+        spray.transform.position += (Vector3)delta - sprayPatternDelta;
     }
 }
