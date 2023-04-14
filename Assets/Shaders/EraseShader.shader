@@ -8,6 +8,7 @@ Shader "EraserShader"
         _EraseLineSegment("Erase line segment", Vector) = (0, 0, 0, 0)
         _EraseLineSegmentLength("Erase line segment length", float) = .0
         _LineSegmentArccos("Line segment arccos", float) = .0
+        _LineSegmentArcsin("Line segment arcsin", float) = .0
         _PatternOverlapModifier("Pattern overlap modifier", int) = 0
         _SegmentCount("Segment count", int) = 0
         _SolidDirtModifier("Solid dirt modifier", float) = .001
@@ -32,6 +33,7 @@ Shader "EraserShader"
             float4 _EraseLineSegment;
             float _EraseLineSegmentLength;
             float _LineSegmentArccos;
+            float _LineSegmentArcsin;
             float _SolidDirtModifier;
             int _SegmentCount;
             int _PatternOverlapModifier;
@@ -60,7 +62,10 @@ Shader "EraserShader"
                     return patternStartPositions;
                 
                 float2 distanceVec = uv - _ErasePosition;
+
                 float relativeLength = abs(distanceVec.y) * _LineSegmentArccos;
+                if (_LineSegmentArccos == .0)
+                    relativeLength = abs(distanceVec.x) * _LineSegmentArcsin;
 
                 int currentSegment = (int) (relativeLength / _EraseLineSegmentLength) + _PatternOverlapModifier;
                 currentSegment = min(currentSegment, _SegmentCount);

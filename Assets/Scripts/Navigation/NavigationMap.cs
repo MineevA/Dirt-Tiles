@@ -70,6 +70,16 @@ public class NavigationMap
         return result;
     }
 
+    public Vector3 ClosestPointToWorldPosition(Vector3 worldPosition, float stickDistance)
+    {
+        var result = ClosestPointToWorldPosition(worldPosition);
+
+        if ((worldPosition - result).magnitude > stickDistance)
+            return worldPosition;
+
+        return result;
+    }
+
     #endregion
 
     #region private_methods

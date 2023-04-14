@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
@@ -14,6 +15,7 @@ public class Dirt : MonoBehaviour
     private readonly int EraseLineSegment       = Shader.PropertyToID("_EraseLineSegment");
     private readonly int EraseLineSegmentLength = Shader.PropertyToID("_EraseLineSegmentLength");
     private readonly int LineSegmentArccos      = Shader.PropertyToID("_LineSegmentArccos");
+    private readonly int LineSegmentArcsin      = Shader.PropertyToID("_LineSegmentArcsin");
     private readonly int SegmentCount           = Shader.PropertyToID("_SegmentCount");
     private readonly int PatternOverlapModifier = Shader.PropertyToID("_PatternOverlapModifier");
     private readonly int SolidDirtModifier      = Shader.PropertyToID("_SolidDirtModifier");
@@ -52,19 +54,28 @@ public class Dirt : MonoBehaviour
         var line = uvFinish - uvStart;
         var segmentVector = CalculateSegmentVector(line, patternRelativeSize);
         var segmentCount = 0f;
+        var segmentArccos = 0f;
+        var segmentArcsin = 0f;
         var patternOverlapModifier = 0;
         
         if (segmentVector.magnitude > 0)
             segmentCount = line.magnitude / segmentVector.magnitude;
 
-        if (segmentVector.y < 0)
+        if (segmentVector.y < 0 || segmentVector.y == 0 && segmentVector.x < 0)
             patternOverlapModifier = 1;
+
+        if (segmentVector.y != 0)
+            segmentArccos = segmentVector.magnitude / Mathf.Abs(segmentVector.y);
+
+        if (segmentVector.x != 0)
+            segmentArcsin = segmentVector.magnitude / Math.Abs(segmentVector.x);
 
         alphaMaterial.SetVector(ErasePosition, uvStart);
         alphaMaterial.SetVector(EraseLineSegment, segmentVector);
         alphaMaterial.SetVector(PatternRelativeSize, patternRelativeSize);
         alphaMaterial.SetFloat(EraseLineSegmentLength,  segmentVector.magnitude);
-        alphaMaterial.SetFloat(LineSegmentArccos, segmentVector.magnitude / Mathf.Abs(segmentVector.y));
+        alphaMaterial.SetFloat(LineSegmentArccos, segmentArccos);
+        alphaMaterial.SetFloat(LineSegmentArcsin, segmentArcsin);
         alphaMaterial.SetFloat(SolidDirtModifier, solidDirtModifier);
         alphaMaterial.SetInt(PatternOverlapModifier, patternOverlapModifier);
         alphaMaterial.SetInt(SegmentCount, (int)segmentCount);
@@ -80,15 +91,15 @@ public class Dirt : MonoBehaviour
         if (line.y != 0)
         {
             var x = line.x * rectY / line.y;
-            if (Mathf.Abs(x) <= Mathf.Abs(rectX))
+            if (Mathf.Abs(x) <= Mathf.Abs(rectX) && Mathf.Abs(rectY) > 0.00f)
                 return new Vector2(x, rectY);
         }
 
         if (line.x != 0)
         {
             var y = line.y * rectX / line.x;
-            if (Mathf.Abs(y) <= Mathf.Abs(rectY))
-                return new Vector2(rectX, y);
+            if (Mathf.Abs(y) <= Mathf.Abs(rectY) && Mathf.Abs(rectX) > 0.00f)
+                return new Vector2(rectX, 0f);
         }
 
         return Vector2.zero;

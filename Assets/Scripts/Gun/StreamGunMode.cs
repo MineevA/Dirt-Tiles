@@ -8,7 +8,8 @@ public class StreamGunMode : IGunMode
     private readonly Vector2 streamPosition = new(-1.04f, 6.23f);
     private readonly Vector2 streamScale = new(0.12f, 1f);
     private readonly Vector2 patternRelativeSize = new(0.02f, 0.02f);
-    private readonly float solidModifier = 0.6f;
+    private readonly float solidModifier = 1f;
+    private readonly float stickDistance = 0.3f;
 
     private Sprite jetSprite;
     private Vector2 lastHitCoord = Vector2.left;
@@ -92,6 +93,6 @@ public class StreamGunMode : IGunMode
         var patternHalfSize = new Vector3(patternRelativeSize.x * dirt.transform.localScale.x / 2,
                                           patternRelativeSize.y * dirt.transform.localScale.y / 2);
 
-        return dirt.navigationMap.ClosestPointToWorldPosition(currentTargetPosition) - patternHalfSize;
+        return dirt.navigationMap.ClosestPointToWorldPosition(currentTargetPosition, stickDistance) - patternHalfSize;
     }
 }
