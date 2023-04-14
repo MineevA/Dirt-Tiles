@@ -39,9 +39,9 @@ public class Spray : MonoBehaviour
         gunMode.OnEnable(this);
     }
 
-    public bool Raycast(Transform target, out Dirt dirt, out RaycastHit hit)
+    public bool Raycast(Vector3 target, out Dirt dirt, out RaycastHit hit)
     {
-        var ray = new Ray(target.position, Vector3.forward);
+        var ray = new Ray(target, Vector3.forward);
 
         if (Physics.Raycast(ray, out hit))
             return hit.collider.TryGetComponent<Dirt>(out dirt);

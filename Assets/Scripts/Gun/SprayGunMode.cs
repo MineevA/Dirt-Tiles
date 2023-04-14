@@ -15,7 +15,7 @@ public class SprayGunMode : IGunMode
 
     public void OnCleanDirt(Spray spray)
     {
-        if (spray.Raycast(spray.target.transform, out var dirt, out var hit))
+        if (spray.Raycast(spray.target.transform.position, out var dirt, out var hit))
         {
             dirt.DrawPixels(hit.textureCoord,
                         spray.erasePatternSizeUV,
@@ -27,7 +27,7 @@ public class SprayGunMode : IGunMode
 
     public void OnCleanNext(Spray spray)
     {
-        if (spray.Raycast(spray.target.transform, out var dirt, out var hit))
+        if (spray.Raycast(spray.target.transform.position, out var dirt, out var hit))
         {
             if (lastHitCoord == Vector2.left)
                 dirt.DrawPixels(hit.textureCoord, 

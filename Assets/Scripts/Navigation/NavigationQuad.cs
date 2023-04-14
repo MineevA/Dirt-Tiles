@@ -8,8 +8,8 @@ public class NavigationQuad
 
     public NavigationQuad(Vector2 coordinates, int verticesCount, NavigationVertex nullVertex)
     {
-        this.position = coordinates;
         this.nullVertex = nullVertex;
+        position = coordinates;
         vertices = new NavigationVertex[verticesCount];
     }
 
@@ -40,7 +40,7 @@ public class NavigationQuad
         vertices[3].position = position + new Vector2(quadSideWidth, 0);
     }
 
-    public NavigationVertex GetClosestVertexByWorldPosition(Vector2 worldPosition)
+    public NavigationVertex ClosestVertexToWorldPosition(Vector2 worldPosition)
     {
         var closestVertex = nullVertex;
         var closestVertexDistance = -1f;

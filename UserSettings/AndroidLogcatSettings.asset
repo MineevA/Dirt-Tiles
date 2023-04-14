@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "0S62401S22100055",
         "name": "com.DefaultCompany.com.unity.template.mobile2D",
-        "processId": 5256,
+        "processId": 16176,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -59,18 +59,6 @@
         {
             "deviceId": "0S62401S22100055",
             "name": "com.DefaultCompany.com.unity.template.mobile2D",
-            "processId": 9757,
-            "exited": true
-        },
-        {
-            "deviceId": "0S62401S22100055",
-            "name": "com.android.launcher3",
-            "processId": 1810,
-            "exited": true
-        },
-        {
-            "deviceId": "0S62401S22100055",
-            "name": "com.DefaultCompany.com.unity.template.mobile2D",
             "processId": 20149,
             "exited": true
         },
@@ -84,12 +72,18 @@
             "deviceId": "0S62401S22100055",
             "name": "com.DefaultCompany.com.unity.template.mobile2D",
             "processId": 4486,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "0S62401S22100055",
             "name": "com.DefaultCompany.com.unity.template.mobile2D",
             "processId": 5256,
+            "exited": true
+        },
+        {
+            "deviceId": "0S62401S22100055",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 16176,
             "exited": false
         }
     ],
