@@ -1509,8 +1509,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunTarget: {fileID: 257329742}
   inputManager: {fileID: 1794590655}
-  velocityModifier: 0.01
-  velocitySquareDistanceModifier: 100
+  velocityModifier: 0.04
+  velocitySquareDistanceModifier: 25
   returnSpeed: 1.5
   trembleReduce: 0.05
   cameraBounds:
