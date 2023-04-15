@@ -8,27 +8,17 @@ public class CameraMovement : MonoBehaviour
     [Range(0f, 1f)]
     public float velocityModifier;
 
-    [Range(0f, 100f)]
-    public float velocitySquareDistanceModifier;
-    
     [Range(0f, 10f)]
-    public float returnSpeed;
-
-    [Range(0f, 1f)]
-    public float trembleReduce;
+    public float brakeIntensity;
 
     public Bounds cameraBounds;
 
     private Vector3 velocity;
-    private Vector3 startPosition;
-    
-    private bool returnMode;
+    private float brake;
         
     // Start is called before the first frame update
     void Start()
     {
-        startPosition = transform.position;
-       
         inputManager.OnTouchDown += OnTouchDown;
         inputManager.OnTouchMove += OnTouchMove;
         inputManager.OnTouchUp += OnTouchUp;
@@ -36,12 +26,17 @@ public class CameraMovement : MonoBehaviour
 
     private void OnTouchDown(TouchPositions touchPositions)
     {
-        SetVelocityByTouch(touchPositions.worldPosition);
+        brake = 0f;
     }
 
     private void OnTouchMove(TouchPositions touchPositions)
     {
         SetVelocityByTouch(touchPositions.worldPosition);
+    }
+
+    private void OnTouchUp(TouchPositions touchPositions)
+    {
+        brake = brakeIntensity;
     }
 
     private void SetVelocityByTouch(Vector3 touchPosition)
@@ -50,25 +45,14 @@ public class CameraMovement : MonoBehaviour
         Vector2 touchDestination = touchPosition - transform.position;
 
         if (gunDestination.magnitude >= touchDestination.magnitude)
-            SetVelocityByDestination(gunTarget.position);
+            SetVelocity(gunDestination);
         else
-            SetVelocityByDestination(touchPosition);
+            SetVelocity(touchDestination);
     }
 
-    private void OnTouchUp(TouchPositions touchPositions)
+    private void SetVelocity(Vector3 velocity)
     {
-        returnMode = true;
-    }
-
-    private void SetVelocityByDestination(Vector3 destination)
-    {
-        returnMode = false;
-        SetVelocity((destination - transform.position) * velocityModifier, velocitySquareDistanceModifier);
-    }
-
-    private void SetVelocity(Vector3 velocity, float squareModifier)
-    {
-        this.velocity = velocity.normalized * velocity.magnitude * velocity.magnitude * squareModifier;
+        this.velocity = velocity * velocityModifier;
         this.velocity.z = 0f;
     }
     
@@ -79,22 +63,12 @@ public class CameraMovement : MonoBehaviour
             transform.position = nextPosition;
         else
             transform.position = cameraBounds.ClosestPoint(nextPosition);
+
+        velocity -= velocity.normalized * brake * Time.deltaTime;
     }
 
     void Update()
     {
         MoveCamera();
-
-        if (returnMode)
-        {
-            var distance = startPosition - transform.position;
-            if (distance.magnitude < trembleReduce)
-            {
-                returnMode = false;
-                distance = Vector3.zero;
-            }
-                
-            SetVelocity(distance.normalized * returnSpeed, 1f);
-        }
     }
 }
