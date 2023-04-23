@@ -64,7 +64,7 @@ public class CameraMovement : MonoBehaviour
         else
             transform.position = cameraBounds.ClosestPoint(nextPosition);
 
-        velocity -= velocity.normalized * brake * Time.deltaTime;
+        velocity -= brake * Time.deltaTime * velocity.normalized;
     }
 
     void Update()
