@@ -95,4 +95,8 @@ public class StreamGunMode : IGunMode
 
         return dirt.navigationMap.ClosestPointToWorldPosition(currentTargetPosition, stickDistance) - patternHalfSize;
     }
+
+    public void OnDisable(Spray spray) { }
+
+    public void OnFrameUpdate(Spray spray) { }
 }

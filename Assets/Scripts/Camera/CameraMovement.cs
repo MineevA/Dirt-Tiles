@@ -19,9 +19,33 @@ public class CameraMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inputManager.OnTouchDown += OnTouchDown;
-        inputManager.OnTouchMove += OnTouchMove;
-        inputManager.OnTouchUp += OnTouchUp;
+        SetDefaultControls();
+    }
+    
+    public void SetDefaultControls()
+    {
+        SetControls(true, true, true);
+    }
+
+    public void SetControls(bool onTouchDown, bool onTouchMove, bool onTouchUp)
+    {
+        DropControls();
+        
+        if (onTouchDown)
+            inputManager.OnTouchDown += OnTouchDown;
+
+        if (onTouchMove)
+            inputManager.OnTouchMove += OnTouchMove;
+
+        if (onTouchUp)
+            inputManager.OnTouchUp += OnTouchUp;
+    }
+
+    public void DropControls()
+    {
+        inputManager.OnTouchDown -= OnTouchDown;
+        inputManager.OnTouchMove -= OnTouchMove;
+        inputManager.OnTouchUp -= OnTouchUp;
     }
 
     private void OnTouchDown(TouchPositions touchPositions)
@@ -55,7 +79,7 @@ public class CameraMovement : MonoBehaviour
         this.velocity = velocity * velocityModifier;
         this.velocity.z = 0f;
     }
-    
+ 
     private void MoveCamera()
     {
         var nextPosition = transform.position + velocity * Time.deltaTime;

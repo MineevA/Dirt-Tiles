@@ -35,6 +35,7 @@ public class Spray : MonoBehaviour
 
     public void SetMode(IGunMode gunMode)
     {
+        this.gunMode?.OnDisable(this);
         this.gunMode = gunMode;
         gunMode.OnEnable(this);
     }
@@ -49,6 +50,11 @@ public class Spray : MonoBehaviour
         dirt = null;
         hit = new RaycastHit();
         return false;
+    }
+
+    private void Update()
+    {
+        gunMode?.OnFrameUpdate(this);
     }
 
 }

@@ -59,6 +59,10 @@ public class SprayGunMode : IGunMode
         lastHitCoord = Vector2.left;
     }
 
+    public void OnDisable(Spray spray) { }
+
+    public void OnFrameUpdate(Spray spray) { }
+
     public void SetSprite(Sprite gunModeSprite)
     {
         jetSprite = gunModeSprite;
