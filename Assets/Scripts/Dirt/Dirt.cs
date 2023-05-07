@@ -22,12 +22,12 @@ public class Dirt : MonoBehaviour
     
     private void Start()
     {
-        alphaMap.Initialize();
-        dirtCounter = GetComponent<DirtCounter>();
         navigationMap = new NavigationMap(new Vector2Int(8,10),
                                           1,
                                           new Vector2(-4,-5));
         navigationMap.FillCellMap();
+
+        SetDefaults();
     }
 
     public void DrawPixels(Vector2 uv, 
@@ -103,6 +103,29 @@ public class Dirt : MonoBehaviour
         }
 
         return Vector2.zero;
+    }
+
+    public void SetDefaults()
+    {
+        InitAlphaMaterial();
+        InitCounter();
+    }
+
+    private void InitAlphaMaterial()
+    {
+        alphaMaterial.SetVector(ErasePosition, Vector2.left);
+        alphaMaterial.SetVector(EraseLineSegment, Vector2.zero);
+        alphaMaterial.SetInt(SegmentCount, 0);
+
+        alphaMap.Initialize();
+    }
+
+    private void InitCounter()
+    {
+        if (dirtCounter == null)
+            dirtCounter = GetComponent<DirtCounter>();
+
+        dirtCounter.InitCounter();
     }
 
 } 

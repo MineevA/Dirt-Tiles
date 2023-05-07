@@ -3,12 +3,14 @@ using Unity.Mathematics;
 using UnityEngine;
 using WFC;
 
-public class TilesGenerator : MonoBehaviour
+public class LevelGenerator : MonoBehaviour
 {
     public Texture2D[] figures;
     public int tileSize;
 
-    private WFC.Generator<Tile> generator;
+    public Dirt dirt;
+
+    private Generator<Tile> generator;
     private Tile[] tiles;
 
     private SpriteRenderer spriteRenderer;
@@ -16,7 +18,7 @@ public class TilesGenerator : MonoBehaviour
     void Start()
     {
         tiles = ParseFigures();
-        generator = new WFC.Generator<Tile>(tiles, GeneratorStateChangeHandler);
+        generator = new Generator<Tile>(tiles, GeneratorStateChangeHandler);
         spriteRenderer = GetComponent<SpriteRenderer>();
         DebugDraw();
     }
@@ -27,11 +29,13 @@ public class TilesGenerator : MonoBehaviour
             DebugDraw();
     }
 
-    private void DebugDraw()
+    public void DebugDraw()
     {
         var generatedTexture = GenerateMap(6, 8);
         generatedTexture.Apply();
-
+        
+        dirt.SetDefaults();
+        
         var sprite = Sprite.Create(generatedTexture, new Rect(0f, 0f, 6 * tileSize, 8 * tileSize), Vector2.zero);
         spriteRenderer.sprite = sprite;
     }

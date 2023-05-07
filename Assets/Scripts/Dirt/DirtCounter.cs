@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class DirtCounter : MonoBehaviour
@@ -14,25 +12,32 @@ public class DirtCounter : MonoBehaviour
     private int pixelsTotal = 0;
     private int pixelsLeft = 0;
 
+    private bool initialized = false;
+
     public int mapWidth, mapHeight;
     public byte alphaThreshold = 50;
 
     public event Action<int, int, DirtCounter> OnCounterUpdate;
-    
-    void Start()
+
+    private void LazyInit()
     {
-        dirtMap = GetComponent<MeshRenderer>().material; 
+        dirtMap = GetComponent<MeshRenderer>().material;
         sourceTexture = dirtMap.mainTexture;
-        
+
         counterTex = new RenderTexture(mapWidth, mapHeight, 0);
         counterTex.Create();
 
         cpuTexture = new Texture2D(mapWidth, mapHeight);
         cpuTextureRect = new Rect(0f, 0f, mapWidth, mapHeight);
+
+        initialized = true;
     }
 
     public void Recalculate()
     {
+        if (!initialized)
+            LazyInit();
+        
         Graphics.Blit(sourceTexture, counterTex, dirtMap);
         RenderTexture.active = counterTex;
 
@@ -44,7 +49,7 @@ public class DirtCounter : MonoBehaviour
 
         if (currentPixels != pixelsLeft)
         {
-            if (pixelsTotal == 0)
+            if (currentPixels > pixelsTotal)
                 pixelsTotal = currentPixels;
 
             pixelsLeft = currentPixels;
@@ -63,5 +68,11 @@ public class DirtCounter : MonoBehaviour
                 visiblePixels++;
 
         return visiblePixels;
+    }
+
+    public void InitCounter()
+    {
+        pixelsTotal = 0;
+        Recalculate();
     }
 }
