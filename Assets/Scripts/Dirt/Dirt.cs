@@ -5,10 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(DirtCounter))]  
 public class Dirt : MonoBehaviour
 {
-    public CustomRenderTexture alphaMap;
-    public Material alphaMaterial;
-    public DirtCounter dirtCounter;
-    public NavigationMap navigationMap;
+    public CustomRenderTexture  alphaMap;
+    public Material             alphaMaterial;
+    public DirtCounter          dirtCounter;
+    public NavigationMap        navigationMap;
+
+    private Material dirtMaterial;
 
     private readonly int ErasePosition          = Shader.PropertyToID("_ErasePosition");
     private readonly int PatternRelativeSize    = Shader.PropertyToID("_PatternRelativeSize");
@@ -26,7 +28,6 @@ public class Dirt : MonoBehaviour
                                           1,
                                           new Vector2(-4,-5));
         navigationMap.FillCellMap();
-
         SetDefaults();
     }
 
@@ -126,6 +127,14 @@ public class Dirt : MonoBehaviour
             dirtCounter = GetComponent<DirtCounter>();
 
         dirtCounter.InitCounter();
+    }
+
+    public void SetDirtTexture(Texture2D texture)
+    {
+        if (dirtMaterial == null)
+            dirtMaterial = GetComponent<MeshRenderer>().material;
+
+        dirtMaterial.SetTexture("_MainTex", texture);
     }
 
 } 

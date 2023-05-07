@@ -9,11 +9,23 @@ public class Tile
     public Tile(Texture2D texture)
     {
         this.texture = texture;
+        FillBorders(TileBorder.Connector);
+    }
 
-        borders = new Dictionary<TileBorderDirection, TileBorder>();
-        borders.Add(TileBorderDirection.Left, TileBorder.Connector);
-        borders.Add(TileBorderDirection.Top, TileBorder.Connector);
-        borders.Add(TileBorderDirection.Right, TileBorder.Connector);
-        borders.Add(TileBorderDirection.Bottom, TileBorder.Connector);
+    public Tile(Texture2D texture, TileBorder bordersType)
+    {
+        this.texture = texture;
+        FillBorders(bordersType);       
+    }
+
+    private void FillBorders(TileBorder bordersType)
+    {
+        borders = new Dictionary<TileBorderDirection, TileBorder>
+        {
+            { TileBorderDirection.Left, bordersType },
+            { TileBorderDirection.Top, bordersType },
+            { TileBorderDirection.Right, bordersType },
+            { TileBorderDirection.Bottom, bordersType }
+        };
     }
 }
