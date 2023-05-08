@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 using WFC;
@@ -10,6 +11,7 @@ public class LevelGenerator : MonoBehaviour
     public Texture2D        solidTexture;
 
     public int              tileSizeInPixels;
+    public int              solidDirtThickness;
     public Vector2Int       tileMapSize;
     public Dirt             dirt;
     public SpriteRenderer   backgroundSpriteRenderer;
@@ -34,6 +36,7 @@ public class LevelGenerator : MonoBehaviour
         var tileMap = generator.Generate(tileMapSize.x, tileMapSize.y);
         SetBackgroundFromTileMap(tileMap);
         SetDirtFromTileMap(tileMap);
+        SetSolidDirtFromTileMap(tileMap);
 
         dirt.SetDefaults();
     }
@@ -57,8 +60,8 @@ public class LevelGenerator : MonoBehaviour
         for (int x = 0; x < tileMapSize.x; x++)
             for (int y = 0; y < tileMapSize.y; y++)
                 if (tileMap[x, y].Equals(transparentTile))
-                    currentDirtTexture.SetPixels((x+1) * tileSizeInPixels,
-                                                 (y+1) * tileSizeInPixels,
+                    currentDirtTexture.SetPixels((x + 1) * tileSizeInPixels,
+                                                 (y + 1) * tileSizeInPixels,
                                                  tileSizeInPixels,
                                                  tileSizeInPixels,
                                                  tileMap[x, y].texture.GetPixels());
@@ -66,6 +69,52 @@ public class LevelGenerator : MonoBehaviour
         currentDirtTexture.Apply();
 
         dirt.SetDirtTexture(currentDirtTexture);               
+    }
+    
+    private void SetSolidDirtFromTileMap(Tile[,] tileMap)
+    {
+        var currentSolidTexture = new Texture2D(solidTexture.width, solidTexture.height);
+        currentSolidTexture.SetPixels(solidTexture.GetPixels(0, 0, solidTexture.width, solidTexture.height));
+
+        var cleanPixels = new Color[solidDirtThickness * tileSizeInPixels];
+        for (int i = 0; i < cleanPixels.Length; i++)
+            cleanPixels[i] = new Color(0f, 0f, 0f, 0f);
+
+        for (int x = 0; x < tileMapSize.x; x++)
+            for (int y = 0; y < tileMapSize.y; y++)
+                foreach (var border in tileMap[x, y].borders)
+                    if (border.Value == TileBorder.Connector || tileMap[x,y].Equals(transparentTile))
+                        SetSolidDirtPixels(ref currentSolidTexture,
+                                            (x + 1) * tileSizeInPixels,
+                                            (y + 1) * tileSizeInPixels,
+                                            cleanPixels,
+                                            border.Key);
+
+
+        currentSolidTexture.Apply();
+        
+        dirt.SetSolidDirtTexture(currentSolidTexture);
+    }
+
+    private void SetSolidDirtPixels(ref Texture2D texture, int x, int y, Color[] cleanPixels, TileBorderDirection direction)
+    {
+        switch(direction)
+        {
+            case TileBorderDirection.Left:
+                texture.SetPixels(x, y, solidDirtThickness, tileSizeInPixels, cleanPixels);
+                break;
+            case TileBorderDirection.Bottom:
+                texture.SetPixels(x, y, tileSizeInPixels, solidDirtThickness, cleanPixels);
+                break;
+            case TileBorderDirection.Top:
+                texture.SetPixels(x, y + tileSizeInPixels - solidDirtThickness, tileSizeInPixels, solidDirtThickness, cleanPixels);
+                break;
+            case TileBorderDirection.Right:
+                texture.SetPixels(x + tileSizeInPixels - solidDirtThickness, y, solidDirtThickness, tileSizeInPixels, cleanPixels);
+                break;
+            default:
+                break;
+        }
     }
 
     private void SetBackgroundFromTileMap(Tile[,] tileMap)

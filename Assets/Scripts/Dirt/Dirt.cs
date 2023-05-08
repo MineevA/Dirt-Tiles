@@ -31,6 +31,12 @@ public class Dirt : MonoBehaviour
         SetDefaults();
     }
 
+    private void DirtMaterialInit()
+    {
+        if (dirtMaterial == null)
+            dirtMaterial = GetComponent<MeshRenderer>().material;
+    }
+
     public void DrawPixels(Vector2 uv, 
                            Vector2 patternRelativeSize,
                            float solidDirtModifier)
@@ -131,10 +137,14 @@ public class Dirt : MonoBehaviour
 
     public void SetDirtTexture(Texture2D texture)
     {
-        if (dirtMaterial == null)
-            dirtMaterial = GetComponent<MeshRenderer>().material;
-
+        DirtMaterialInit();
         dirtMaterial.SetTexture("_MainTex", texture);
+    }
+
+    public void SetSolidDirtTexture(Texture2D texture)
+    {
+        DirtMaterialInit();
+        dirtMaterial.SetTexture("_SolidDirt", texture);
     }
 
 } 

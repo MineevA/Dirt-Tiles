@@ -4,7 +4,6 @@ using UnityEngine;
 public class DirtCounter : MonoBehaviour
 {
     private Material dirtMap;
-    private Texture sourceTexture;
     private RenderTexture counterTex;
     private Texture2D cpuTexture;
     private Rect cpuTextureRect;
@@ -22,7 +21,6 @@ public class DirtCounter : MonoBehaviour
     private void LazyInit()
     {
         dirtMap = GetComponent<MeshRenderer>().material;
-        sourceTexture = dirtMap.mainTexture;
 
         counterTex = new RenderTexture(mapWidth, mapHeight, 0);
         counterTex.Create();
@@ -38,7 +36,7 @@ public class DirtCounter : MonoBehaviour
         if (!initialized)
             LazyInit();
         
-        Graphics.Blit(sourceTexture, counterTex, dirtMap);
+        Graphics.Blit(dirtMap.mainTexture, counterTex, dirtMap);
         RenderTexture.active = counterTex;
 
         cpuTexture.ReadPixels(cpuTextureRect, 0, 0, false);

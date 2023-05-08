@@ -58,8 +58,10 @@ Shader "Unlit/DirtShader"
 
                 color.a = min(alphaColor.r, color.a);
                 solidColor.a = min(alphaColor.g, solidColor.a);
+
+                float colorAlpha = color.a / (color.a + solidColor.a);
                     
-                return max(color,solidColor);
+                return fixed4(color.rgb * colorAlpha + solidColor.rgb * (1 - colorAlpha), color.a + solidColor.a);
             }
             ENDCG
         }
