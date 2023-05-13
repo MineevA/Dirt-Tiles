@@ -6,8 +6,9 @@ namespace WFC
     {
         public ComponentState<T> state;
         public ComponentState<T>[] possibleStates;
-        public int x;
-        public int y;
+        public readonly int x;
+        public readonly int y;
+        public int priorityWeight;
 
         private Random random = new Random();
 
@@ -24,17 +25,19 @@ namespace WFC
             foreach (var possibleState in possibleStates)
                 summaryWeight += possibleState.weight;
 
+            var randomResult = random.Next(1, summaryWeight + 1);
+            
             foreach (var possibleState in possibleStates)
             {
-                int randomResult = random.Next(0, summaryWeight);
-                if (randomResult <= possibleState.weight)
+                randomResult -= possibleState.weight;
+                if (randomResult <= 0)
                 {
                     SetState(possibleState);
                     return state;
                 }
             }
 
-            SetState(possibleStates[0]);
+            SetState(possibleStates[possibleStates.Length - 1]);
             return state;
         }
 
@@ -66,7 +69,12 @@ namespace WFC
 
         public int CompareTo(Component<T> other)
         {
-            return other.possibleStates.Length - possibleStates.Length;
+            var diff = other.possibleStates.Length - possibleStates.Length;
+            
+            if (diff == 0)
+                diff = priorityWeight - other.priorityWeight;
+
+            return diff;
         }
 
         public Component<T> Copy()

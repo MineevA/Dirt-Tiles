@@ -7283,6 +7283,7 @@ MonoBehaviour:
   solidTexture: {fileID: 2800000, guid: 1297de568f95f6543b4de90ff0945d9a, type: 3}
   tileSizeInPixels: 128
   solidDirtThickness: 3
+  tilesToGenerate: 0
   tileMapSize: {x: 6, y: 8}
   dirt: {fileID: 1595657963}
   backgroundSpriteRenderer: {fileID: 1453738952}
