@@ -4,17 +4,20 @@ using UnityEngine;
 public class Tile
 {
     public Texture2D texture;
+    public Color[] pixels;
     public Dictionary<TileBorderDirection, TileBorder> borders;
 
     public Tile(Texture2D texture)
     {
         this.texture = texture;
+        pixels = this.texture.GetPixels();
         FillBorders(TileBorder.Connector);
     }
 
     public Tile(Texture2D texture, TileBorder bordersType)
     {
         this.texture = texture;
+        pixels = this.texture.GetPixels();
         FillBorders(bordersType);       
     }
 

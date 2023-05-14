@@ -2,9 +2,9 @@ Shader "Unlit/DirtShader"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-        _SolidDirt ("Texture", 2D) = "white" {}
-        _AlphaTex ("AlphaTexture",2D) = "white" {}
+        _MainTex ("Dirt texture", 2D) = "white" {}
+        _SolidDirt ("Solid dirt texture", 2D) = "white" {}
+        _AlphaTex ("Alpha texture",2D) = "white" {}
     }
     SubShader
     {

@@ -146,6 +146,5 @@ public class Dirt : MonoBehaviour
         DirtMaterialInit();
         dirtMaterial.SetTexture("_SolidDirt", texture);
     }
-
 } 
 
