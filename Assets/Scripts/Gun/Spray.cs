@@ -20,12 +20,12 @@ public class Spray : MonoBehaviour
         splash.SetActive(enabled);
 
         if (enabled)
-            CleanDirt();
+            CleanStart();
     }
     
-    public void CleanDirt()
+    public void CleanStart()
     {
-        gunMode.OnCleanDirt(this);
+        gunMode.OnCleanStart(this);
     }
 
     public void CleanNext()

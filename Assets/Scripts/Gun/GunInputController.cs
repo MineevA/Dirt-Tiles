@@ -5,7 +5,7 @@ public class GunInputController : MonoBehaviour
 {
     private InputManager inputManager;
     private Gun gun;
-    
+     
     void Start()
     {
         inputManager = GameObject.FindGameObjectWithTag("InputManager").GetComponent<InputManager>();
@@ -18,7 +18,11 @@ public class GunInputController : MonoBehaviour
 
     private void OnTouchDown(TouchPositions touchPositions)
     {
-        gun.SetActive(true, touchPositions.worldPosition);
+        var ray = new Ray(touchPositions.worldPosition, Vector3.forward);
+        var gunTag = "Gun"; 
+        
+        if (Physics.Raycast(ray, out var hit,2f, LayerMask.GetMask(gunTag)))
+            gun.SetActive(true, touchPositions.worldPosition);
     }
 
     private void OntouchMove(TouchPositions touchPositions)
@@ -29,6 +33,7 @@ public class GunInputController : MonoBehaviour
 
     private void OnTouchUp(TouchPositions touchPositions)
     {
-        gun.SetActive(false, touchPositions.worldPosition);
+        if (gun.isActivated)
+            gun.SetActive(false, touchPositions.worldPosition);
     }
 }

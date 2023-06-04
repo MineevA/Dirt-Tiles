@@ -13,7 +13,7 @@ public class SprayGunMode : IGunMode
     private Sprite jetSprite;
     private Vector2 lastHitCoord = Vector2.left;
 
-    public void OnCleanDirt(Spray spray)
+    public void OnCleanStart(Spray spray)
     {
         if (spray.Raycast(spray.target.transform.position, out var dirt, out var hit))
         {

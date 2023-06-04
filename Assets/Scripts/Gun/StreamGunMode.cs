@@ -14,7 +14,7 @@ public class StreamGunMode : IGunMode
     private Sprite jetSprite;
     private Vector2 lastHitCoord = Vector2.left;
 
-    public void OnCleanDirt(Spray spray)
+    public void OnCleanStart(Spray spray)
     {
         var target = spray.target.transform.position;
 
@@ -40,7 +40,6 @@ public class StreamGunMode : IGunMode
 
         if (spray.Raycast(target, out dirt, out hit))
         { 
-
             if (lastHitCoord == Vector2.left)
                 dirt.DrawPixels(hit.textureCoord,
                                 spray.erasePatternSizeUV,
