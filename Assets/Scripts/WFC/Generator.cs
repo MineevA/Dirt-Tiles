@@ -75,6 +75,17 @@ namespace WFC
                     componentMap.RestoreState(mapHistory.Pop());
             }
         }
+
+        public void SetPossibleStatesToUndefinedComponents(ComponentState<T>[] possibleStates)
+        {
+            componentMap.SetPossibleStatesToUndefinedComponents(possibleStates);
+        }
+
+        public void SetStateToUndefinedComponents(ComponentState<T> state)
+        {
+            componentMap.SetStateToUndefinedComponents(state);
+        }
+
     }
 }
 

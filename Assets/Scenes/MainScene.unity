@@ -7135,7 +7135,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1220363055}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.75, y: -4.25, z: 0}
+  m_LocalPosition: {x: 0.78, y: -4.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7172,9 +7172,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb75f2249a3f0f45b0c6dc5efe5e0c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActivated: 0
+  inControl: 0
   streamSprite: {fileID: 21300000, guid: 9ff5df00dd408fb4a954b511b16f11f4, type: 3}
   spraySprite: {fileID: 21300000, guid: 7677f50196f84844e95cb1ccb52bbbc1, type: 3}
+  target: {fileID: 257329741}
+  particles: {fileID: 960214586}
+  erasePatternSizeUV: {x: 0, y: 0}
+  solidDirtModifier: 0
 --- !u!114 &1220363060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7190,10 +7194,6 @@ MonoBehaviour:
   jet: {fileID: 79368752}
   stream: {fileID: 1094411850}
   splash: {fileID: 2108124940}
-  target: {fileID: 257329741}
-  particles: {fileID: 960214586}
-  erasePatternSizeUV: {x: 0, y: 0}
-  solidDirtModifier: 0
 --- !u!1 &1322919408
 GameObject:
   m_ObjectHideFlags: 0
@@ -7339,7 +7339,7 @@ GameObject:
   - component: {fileID: 1453738951}
   m_Layer: 0
   m_Name: LevelGenerator
-  m_TagString: Untagged
+  m_TagString: LevelGenerator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7383,7 +7383,6 @@ MonoBehaviour:
   tileMapSize: {x: 6, y: 8}
   dirt: {fileID: 1595657963}
   tilesBackground: {fileID: 372667127}
-  textureFormat: 4
 --- !u!1 &1595657958
 GameObject:
   m_ObjectHideFlags: 0

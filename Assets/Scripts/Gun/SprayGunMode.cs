@@ -13,60 +13,45 @@ public class SprayGunMode : IGunMode
     private Sprite jetSprite;
     private Vector2 lastHitCoord = Vector2.left;
 
-    public void OnCleanStart(Spray spray)
+    public void OnEnable(Gun gun, Spray spray)
     {
-        if (spray.Raycast(spray.target.transform.position, out var dirt, out var hit))
-        {
-            dirt.DrawPixels(hit.textureCoord,
-                        spray.erasePatternSizeUV,
-                        spray.solidDirtModifier);
-
-            lastHitCoord = hit.textureCoord;
-        }
-    }
-
-    public void OnCleanNext(Spray spray)
-    {
-        if (spray.Raycast(spray.target.transform.position, out var dirt, out var hit))
-        {
-            if (lastHitCoord == Vector2.left)
-                dirt.DrawPixels(hit.textureCoord, 
-                                spray.erasePatternSizeUV, 
-                                spray.solidDirtModifier);
-            else
-                dirt.DrawLine(lastHitCoord, 
-                              hit.textureCoord, 
-                              spray.erasePatternSizeUV, 
-                              spray.solidDirtModifier);
-
-            lastHitCoord = hit.textureCoord;
-        }
-        else
-            lastHitCoord = Vector2.left;
-    }
-
-    public void OnEnable(Spray spray)
-    {
-        SetTransform(spray.target.transform, targetPosition, Vector2.one);
+        SetTransform(gun.target.transform, targetPosition, Vector2.one);
         SetTransform(spray.splash.transform, splashPosition, splashScale);
         SetTransform(spray.stream.transform, streamPosition, streamScale);
 
         spray.jet.GetComponent<SpriteRenderer>().sprite = jetSprite;
-        
-        spray.erasePatternSizeUV = patternRelativeSize;
-        spray.solidDirtModifier = solidModifier;
+
+        gun.erasePatternSizeUV = patternRelativeSize;
+        gun.solidDirtModifier = solidModifier;
 
         lastHitCoord = Vector2.left;
     }
 
-    public void OnDisable(Spray spray) { }
+    public void OnSetActive(bool active, Gun gun, Vector3 position)
+    {
+        if (!active) return;
 
-    public void OnFrameUpdate(Spray spray) { }
+        lastHitCoord = gun.TryDrawPixels();
+    }
+
+    public void OnMove(Vector3 position, Gun gun)
+    {
+        gun.transform.position = position;
+
+        if (lastHitCoord == Vector2.left)
+            lastHitCoord = gun.TryDrawPixels();
+        else
+            lastHitCoord = gun.TryDrawLine(lastHitCoord);
+    }
+
+    public void OnDisable() { }
 
     public void SetSprite(Sprite gunModeSprite)
     {
         jetSprite = gunModeSprite;
     }
+
+    public void OnFrameUpdate() { }
 
     private void SetTransform(Transform transform, Vector2 position, Vector2 scale)
     {

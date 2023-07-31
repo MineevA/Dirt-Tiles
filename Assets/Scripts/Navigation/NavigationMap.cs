@@ -3,107 +3,160 @@ using UnityEngine;
 
 public class NavigationMap
 {
-    private int quadSideWidth;
     private Vector2 worldPosition;
-    private NavigationQuad[,] quadMap;
-    private NavigationVertex nullVertex;
-    private NavigationQuad nullQuad;
+    private NavigationVertex[,] vertices;
 
-    public NavigationMap(Vector2Int bounds, int width, Vector2 position)
+    public NavigationMap(Vector2Int bounds, Vector2 position)
     {
-        quadMap = new NavigationQuad[bounds.x, bounds.y];
-        quadSideWidth = width;
         worldPosition = position;
-
-        InitNullObjects();
+        InitVertices(bounds);
     }
 
-    public void FillCellMap()
+    private void InitVertices(Vector2Int bounds)
     {
-        for (int x = 0; x <= quadMap.GetUpperBound(0); x++)
-            for (int y = 0; y <= quadMap.GetUpperBound(1); y++)
+        vertices = new NavigationVertex[bounds.x, bounds.y];
+        
+        for (int x = 0; x < bounds.x; x++)
+            for (int y = 0; y < bounds.y; y++)
+                vertices[x, y] = new NavigationVertex(x, y);
+    }
+
+    #region Fill_map
+
+    public void FillMap(Tile[,] tileMap)
+    {
+        ClearVertices();
+        
+        for (int x = 0; x <= tileMap.GetUpperBound(0); x++)
+            for (int y = 0; y <= tileMap.GetUpperBound(1); y++)
             {
-                var position = worldPosition + new Vector2(x * quadSideWidth, y * quadSideWidth);
-                quadMap[x, y] = new NavigationQuad(position, 4, nullVertex);
-                quadMap[x, y].FillCellQuad(quadSideWidth);
+                if (tileMap[x, y].transparent)
+                    continue;
+
+                var tile = tileMap[x, y];
+
+                foreach (var border in tile.borders)
+                    if (border.Value.Equals(TileBorder.Edge))
+                        SetVerticesByBorderDirection(x, y, border.Key);
             }
     }
 
-    private void InitNullObjects()
+    private void ClearVertices()
     {
-        nullVertex = new NavigationVertex();
-        nullVertex.position = -Vector2.one;
-        nullQuad = new NavigationQuad(Vector2.zero, 0, nullVertex);
+        foreach (var vertex in vertices)
+        {
+            vertex.active = false;
+            vertex.InitNeighbors();
+        }
     }
 
-    #region public_methods
-
-    public NavigationVertex ClosestVertexToWorldPosition(Vector2 worldPosition)
+    private void SetVerticesByBorderDirection(int x, int y, TileBorderDirection direction)
     {
-        var quad = FindQuadByWorldPosition(worldPosition);
-        return quad.ClosestVertexToWorldPosition(worldPosition);
+        switch (direction)
+        {
+            case TileBorderDirection.Left:
+                LinkEdgeVertices(vertices[x, y], vertices[x, y + 1]);
+                break;
+            case TileBorderDirection.Top:
+                LinkEdgeVertices(vertices[x, y + 1], vertices[x + 1, y + 1]);
+                break;
+            case TileBorderDirection.Right:
+                LinkEdgeVertices(vertices[x + 1, y + 1], vertices[x + 1, y]);
+                break;
+            case TileBorderDirection.Bottom:
+                LinkEdgeVertices(vertices[x, y], vertices[x + 1, y]);
+                break;
+            default:
+                break;
+        }
     }
 
-    public Vector2 ClosestPointToWorldPosition(Vector2 worldPosition)
+    private void LinkEdgeVertices(NavigationVertex vertex1, NavigationVertex vertex2)
     {
-        var edgeStart = ClosestVertexToWorldPosition(worldPosition);
-        
-        if (edgeStart.Equals(nullVertex))
-            return worldPosition;
+        vertex1.active = true;
+        vertex2.active = true;
 
-        var edgeEnd = edgeStart.ClosestVertexToPosition(worldPosition);
-
-        if (edgeEnd == edgeStart)
-            return edgeStart.position;
-
-        var segment = edgeEnd.position - edgeStart.position;
-        var pointVector = worldPosition - edgeStart.position;
-
-        return edgeStart.position + VectorToVectorProjection(segment, pointVector);
-    }
-    
-    public Vector3 ClosestPointToWorldPosition(Vector3 worldPosition)
-    {
-        var result = (Vector3)ClosestPointToWorldPosition((Vector2)worldPosition);
-        result.z = worldPosition.z;
-
-        return result;
-    }
-
-    public Vector3 ClosestPointToWorldPosition(Vector3 worldPosition, float stickDistance)
-    {
-        var result = ClosestPointToWorldPosition(worldPosition);
-
-        if ((worldPosition - result).magnitude > stickDistance)
-            return worldPosition;
-
-        return result;
+        vertex1.AddNeighbor(vertex2);
+        vertex2.AddNeighbor(vertex1);
     }
 
     #endregion
 
-    #region private_methods
+    #region Navigation
 
-    private NavigationQuad FindQuadByWorldPosition(Vector2 worldPosition)
+    public Vector3 GetClosestPosition(Vector3 worldPosition)
     {
-        var relativePosition = worldPosition - this.worldPosition;
-        return FindQuadByRelativePosition(relativePosition);
+        var relativePosition = (Vector2)worldPosition - this.worldPosition;
+        
+        var closestVertexX = (int)Math.Round(relativePosition.x);
+        var closestVertexY = (int)Math.Round(relativePosition.y);
+
+        if (!CoordinatesInBounds(closestVertexX, closestVertexY))
+            return worldPosition;
+
+        var edgeStart = vertices[closestVertexX, closestVertexY];
+        if (!edgeStart.active)
+            return worldPosition;
+        
+        var edgeEnd = edgeStart;
+        var closestDistance = -1f;
+
+        foreach(var vertex in edgeStart.neighbors)
+        {
+            if (vertex == null || !vertex.active)
+                continue;
+
+            var distanceToPosition = (relativePosition - vertex.position).magnitude;
+            if (distanceToPosition < closestDistance || closestDistance == -1f)
+            {
+                closestDistance = distanceToPosition;
+                edgeEnd = vertex;
+            }
+        }
+
+        var edgeVector = edgeEnd.position - edgeStart.position;
+        var relativeToEdgeStart = relativePosition - edgeStart.position;
+        
+        var closest = VectorToVectorProjection(edgeVector, relativeToEdgeStart) + edgeStart.position + this.worldPosition;
+
+        return new Vector3(closest.x, closest.y, worldPosition.z);
     }
 
-    private NavigationQuad FindQuadByRelativePosition(Vector2 relativePosition)
+    public bool CoordinatesInBounds(int x, int y)
     {
-        var quadX = (int)Math.Floor(relativePosition.x / quadSideWidth);
-        var quadY = (int)Math.Floor(relativePosition.y / quadSideWidth);
+        if (x < 0 || y < 0 || x > vertices.GetUpperBound(0) || y > vertices.GetUpperBound(1)) 
+            return false;
 
-        if (quadX < 0 || quadY < 0 || quadX > quadMap.GetUpperBound(0) || quadY > quadMap.GetUpperBound(1))
-            return nullQuad;
-
-        return quadMap[quadX, quadY];
+        return true;
     }
 
     private Vector2 VectorToVectorProjection(Vector2 main, Vector2 projected)
     {
         return main * (Vector2.Dot(main, projected) / main.sqrMagnitude);
+    }
+
+    #endregion
+
+    #region debug
+
+    public void DebugDraw()
+    {
+        foreach (var vertex in vertices)
+            vertex.debugDrawn = false;
+        
+        foreach(var vertex in vertices)
+        {
+            if (!vertex.active)
+                continue;
+
+            foreach(var neighbor in vertex.neighbors)
+            {
+                if (neighbor == null || !neighbor.active)
+                    continue;
+
+                Debug.DrawLine(vertex.position + worldPosition, neighbor.position + worldPosition,Color.green,3);
+            }
+        }
     }
 
     #endregion

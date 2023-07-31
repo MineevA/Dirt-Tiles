@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class StreamGunMode : IGunMode
 {
@@ -9,65 +10,71 @@ public class StreamGunMode : IGunMode
     private readonly Vector2 streamScale = new(0.12f, 1f);
     private readonly Vector2 patternRelativeSize = new(0.02f, 0.02f);
     private readonly float solidModifier = 1f;
-    private readonly float stickDistance = 0.3f;
+    private readonly float moveStep = 0.1f;
 
     private Sprite jetSprite;
-    private Vector2 lastHitCoord = Vector2.left;
+    private Gun gun;
+    private NavigationMap navigationMap;
 
-    public void OnCleanStart(Spray spray)
+    private bool isMoving = false;
+    private Vector3 moveDestination;
+    private Vector3 catchModificator;
+    private Vector2 patternDrawModificator;
+
+    public void OnEnable(Gun gun, Spray spray)
     {
-        var target = spray.target.transform.position;
+        this.gun = gun;
+        gun.erasePatternSizeUV = patternRelativeSize;
+        gun.solidDirtModifier = solidModifier;
 
-        if (spray.Raycast(target, out var dirt, out var hit))
-            target = CleanTargetPoint(dirt, spray);
-
-        if (spray.Raycast(target, out dirt, out hit))
-        { 
-            dirt.DrawPixels(hit.textureCoord,
-                            spray.erasePatternSizeUV,
-                            spray.solidDirtModifier);
-
-            lastHitCoord = hit.textureCoord;
-        }
-    }
-
-    public void OnCleanNext(Spray spray)
-    {
-        var target = spray.target.transform.position;
-
-        if (spray.Raycast(target, out var dirt, out var hit))
-            target = CleanTargetPoint(dirt, spray);
-
-        if (spray.Raycast(target, out dirt, out hit))
-        { 
-            if (lastHitCoord == Vector2.left)
-                dirt.DrawPixels(hit.textureCoord,
-                                spray.erasePatternSizeUV,
-                                spray.solidDirtModifier);
-            else
-                dirt.DrawLine(lastHitCoord,
-                              hit.textureCoord,
-                              spray.erasePatternSizeUV,
-                              spray.solidDirtModifier);
-
-            lastHitCoord = hit.textureCoord;
-        }
-        else
-            lastHitCoord = Vector2.left;
-    }
-
-    public void OnEnable(Spray spray)
-    {
-        SetTransform(spray.target.transform, targetPosition, Vector2.one);
-        SetTransform(spray.splash.transform, splashPosition, splashScale);
-        SetTransform(spray.stream.transform, streamPosition, streamScale);
+        LazyNavigationMapInit();
+        UpdateTransform(gun.target.transform, targetPosition, Vector2.one);
+        UpdateTransform(spray.splash.transform, splashPosition, splashScale);
+        UpdateTransform(spray.stream.transform, streamPosition, streamScale);
 
         spray.jet.GetComponent<SpriteRenderer>().sprite = jetSprite;
-        
-        spray.erasePatternSizeUV = patternRelativeSize;
-        spray.solidDirtModifier = solidModifier;
 
-        lastHitCoord = Vector2.left;
+        var currentTargetPosition = gun.target.transform.position;
+        var availablePosition = navigationMap.GetClosestPosition(currentTargetPosition);
+
+        spray.transform.position += availablePosition - currentTargetPosition;
+
+        patternDrawModificator = patternRelativeSize / -2;
+    }
+
+    public void OnSetActive(bool active, Gun gun, Vector3 position)
+    {
+        isMoving = active;
+
+        if (active)
+        {
+            catchModificator = position - gun.target.transform.position;
+            catchModificator.z = gun.target.transform.position.z;
+            gun.TryDrawPixels(patternDrawModificator);
+        }
+    }
+
+    public void OnMove(Vector3 position, Gun gun)
+    {
+        moveDestination = position - catchModificator;
+        moveDestination.z = gun.target.transform.position.z;
+    }
+
+    public void OnDisable() 
+    {
+        isMoving = false;
+    }
+
+    public void OnFrameUpdate() 
+    {
+        if (!isMoving)
+            return;
+        
+        var moveDirection = (moveDestination - gun.target.transform.position).normalized;
+        var nextStep = gun.target.transform.position + moveDirection * moveStep;
+        
+        gun.transform.position += navigationMap.GetClosestPosition(nextStep) - gun.target.transform.position;
+        gun.TryDrawPixels(patternDrawModificator);
     }
 
     public void SetSprite(Sprite gunModeSprite)
@@ -75,7 +82,7 @@ public class StreamGunMode : IGunMode
         jetSprite = gunModeSprite;
     }
 
-    private void SetTransform(Transform transform, Vector2 position, Vector2 scale)
+    private void UpdateTransform(Transform transform, Vector2 position, Vector2 scale)
     {
         transform.localPosition = new Vector3(position.x,
                                          position.y,
@@ -85,17 +92,13 @@ public class StreamGunMode : IGunMode
                                            scale.y,
                                            transform.localScale.z);
     }
-
-    private Vector3 CleanTargetPoint(Dirt dirt, Spray spray)
+    
+    private void LazyNavigationMapInit()
     {
-        var currentTargetPosition = spray.target.transform.position;
-        var patternHalfSize = new Vector3(patternRelativeSize.x * dirt.transform.localScale.x / 2,
-                                          patternRelativeSize.y * dirt.transform.localScale.y / 2);
-
-        return dirt.navigationMap.ClosestPointToWorldPosition(currentTargetPosition, stickDistance) - patternHalfSize;
+        if (navigationMap == null)
+        {
+            var levelGenerator = GameObject.FindGameObjectWithTag("LevelGenerator");
+            navigationMap = levelGenerator.GetComponent<LevelGenerator>().navigationMap;
+        }
     }
-
-    public void OnDisable(Spray spray) { }
-
-    public void OnFrameUpdate(Spray spray) { }
 }

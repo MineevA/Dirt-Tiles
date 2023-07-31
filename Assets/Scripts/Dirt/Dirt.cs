@@ -8,7 +8,6 @@ public class Dirt : MonoBehaviour
     public CustomRenderTexture  alphaMap;
     public Material             alphaMaterial;
     public DirtCounter          dirtCounter;
-    public NavigationMap        navigationMap;
 
     private Material dirtMaterial;
 
@@ -24,10 +23,6 @@ public class Dirt : MonoBehaviour
     
     private void Start()
     {
-        navigationMap = new NavigationMap(new Vector2Int(8,10),
-                                          1,
-                                          new Vector2(-4,-5));
-        navigationMap.FillCellMap();
         SetDefaults();
     }
 

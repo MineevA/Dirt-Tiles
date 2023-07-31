@@ -6,6 +6,7 @@ public class Tile
     public Texture2D texture;
     public Color[] pixels;
     public Dictionary<TileBorderDirection, TileBorder> borders;
+    public bool transparent = false;
 
     public Tile(Texture2D texture)
     {

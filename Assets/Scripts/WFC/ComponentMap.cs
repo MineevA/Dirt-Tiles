@@ -12,7 +12,21 @@ namespace WFC
                 for (int j = 0; j < height; j++)
                     map[i, j] = new Component<T>(i, j, possibleStates);
         }
-  
+        
+        public void SetPossibleStatesToUndefinedComponents(ComponentState<T>[] possibleStates)
+        {
+            foreach(var component in map)
+                if (component.state == null)
+                    component.possibleStates = possibleStates;
+        }
+        
+        public void SetStateToUndefinedComponents(ComponentState<T> state)
+        {
+            foreach (var component in map)
+                if (component.state == null)
+                    component.state = state;
+        }
+
         public bool TryGetPriorityComponent(out Component<T> priorityComponent)
         {
             priorityComponent = null;
@@ -22,7 +36,7 @@ namespace WFC
                 if (component.state != null)
                     continue;
 
-                if (priorityComponent == null || priorityComponent.CompareTo(component) < 0)
+                if (priorityComponent == null || priorityComponent.CompareTo(component) > 0)
                     priorityComponent = component;
             }
 

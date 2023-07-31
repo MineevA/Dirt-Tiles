@@ -69,11 +69,8 @@ namespace WFC
 
         public int CompareTo(Component<T> other)
         {
-            var diff = other.possibleStates.Length - possibleStates.Length;
+            var diff = (possibleStates.Length - priorityWeight) - (other.possibleStates.Length - other.priorityWeight);
             
-            if (diff == 0)
-                diff = priorityWeight - other.priorityWeight;
-
             return diff;
         }
 
