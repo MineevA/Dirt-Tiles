@@ -18,6 +18,11 @@ public class Gun : MonoBehaviour
 
     private IGunMode currentMode;
 
+    private EffectMask dirtHitMask = EffectMask.Jet | EffectMask.Splash | EffectMask.Stream;
+    private EffectMask dirtMissMask = EffectMask.Jet;
+
+    private Tile[,] tileMap;
+
     private void Start()
     {
         sprayEffect = GetComponent<Spray>();
@@ -41,9 +46,9 @@ public class Gun : MonoBehaviour
 
     public void SetActive(bool active, Vector3 position)
     {
+        sprayEffect.SetEffectActive(EffectMask.None);
         inControl = active;
         currentMode.OnSetActive(active, this, position);
-        sprayEffect.SetEffectActive(active);
     }
 
     public void ChangeMode()
@@ -70,10 +75,12 @@ public class Gun : MonoBehaviour
             dirt.DrawPixels(hit.textureCoord + modificator,
                             erasePatternSizeUV,
                             solidDirtModifier);
-
+            
+            sprayEffect.SetEffectActive(dirtHitMask);
             return hit.textureCoord;
         }
 
+        sprayEffect.SetEffectActive(dirtMissMask);
         return Vector2.left;
     }
 
@@ -86,9 +93,11 @@ public class Gun : MonoBehaviour
                           erasePatternSizeUV,
                           solidDirtModifier);
 
+            sprayEffect.SetEffectActive(dirtHitMask);
             return hit.textureCoord;
         }
-        
+
+        sprayEffect.SetEffectActive(dirtMissMask);
         return Vector2.left;
     }
 
@@ -102,6 +111,11 @@ public class Gun : MonoBehaviour
         dirt = null;
         hit = new RaycastHit();
         return false;
+    }
+
+    public void SetTileMap(Tile[,] tileMap)
+    {
+        this.tileMap = tileMap;
     }
 
     private void Update()

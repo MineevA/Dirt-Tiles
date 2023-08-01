@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: DefaultLevel
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: de7b8b1c980606b44b03b771fa778e74, type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: figures.Array.size
+    value: 3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: figures.Array.data[0]
+    value: 
+    objectReference: {fileID: 2800000, guid: 4b14ae67702fb57448a148207607b68a, type: 3}
+  - target: {fileID: 0}
+    propertyPath: figures.Array.data[1]
+    value: 
+    objectReference: {fileID: 2800000, guid: afb3ff9725ec6a54e810e102ebcbf81a, type: 3}
+  - target: {fileID: 0}
+    propertyPath: figures.Array.data[2]
+    value: 
+    objectReference: {fileID: 2800000, guid: a9a3ede91949c8544b0c782b6261dc35, type: 3}
+  - target: {fileID: 0}
+    propertyPath: dirtTexture
+    value: 
+    objectReference: {fileID: 2800000, guid: eb2c2360153f83947a62901905378727, type: 3}
+  - target: {fileID: 0}
+    propertyPath: solidTexture
+    value: 
+    objectReference: {fileID: 2800000, guid: 1297de568f95f6543b4de90ff0945d9a, type: 3}
+  - target: {fileID: 0}
+    propertyPath: tileSizeInPixels
+    value: 128
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: solidDirtThickness
+    value: 3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: tilesToGenerate
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: tileMapSize.x
+    value: 6
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: tileMapSize.y
+    value: 8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: dirt
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: tilesBackground
+    value: 
+    objectReference: {fileID: 0}
+  m_ExcludedProperties: []

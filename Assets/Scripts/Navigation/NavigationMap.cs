@@ -23,17 +23,17 @@ public class NavigationMap
 
     #region Fill_map
 
-    public void FillMap(Tile[,] tileMap)
+    public void FillMap(TileMap tileMap)
     {
         ClearVertices();
         
-        for (int x = 0; x <= tileMap.GetUpperBound(0); x++)
-            for (int y = 0; y <= tileMap.GetUpperBound(1); y++)
+        for (int x = 0; x < tileMap.width; x++)
+            for (int y = 0; y < tileMap.height; y++)
             {
-                if (tileMap[x, y].transparent)
+                if (tileMap.Tile(x, y).transparent)
                     continue;
 
-                var tile = tileMap[x, y];
+                var tile = tileMap.Tile(x, y);
 
                 foreach (var border in tile.borders)
                     if (border.Value.Equals(TileBorder.Edge))

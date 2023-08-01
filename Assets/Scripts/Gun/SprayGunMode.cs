@@ -29,7 +29,8 @@ public class SprayGunMode : IGunMode
 
     public void OnSetActive(bool active, Gun gun, Vector3 position)
     {
-        if (!active) return;
+        if (!active) 
+            return;
 
         lastHitCoord = gun.TryDrawPixels();
     }
@@ -43,7 +44,7 @@ public class SprayGunMode : IGunMode
         else
             lastHitCoord = gun.TryDrawLine(lastHitCoord);
     }
-
+    
     public void OnDisable() { }
 
     public void SetSprite(Sprite gunModeSprite)

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class StreamGunMode : IGunMode
 {
@@ -46,12 +45,12 @@ public class StreamGunMode : IGunMode
     {
         isMoving = active;
 
-        if (active)
-        {
-            catchModificator = position - gun.target.transform.position;
-            catchModificator.z = gun.target.transform.position.z;
-            gun.TryDrawPixels(patternDrawModificator);
-        }
+        if (!active)
+            return;
+
+        catchModificator = position - gun.target.transform.position;
+        catchModificator.z = gun.target.transform.position.z;
+        gun.TryDrawPixels(patternDrawModificator);
     }
 
     public void OnMove(Vector3 position, Gun gun)
